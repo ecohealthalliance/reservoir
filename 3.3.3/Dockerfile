@@ -1,14 +1,16 @@
-FROM ecohealthalliance/geoverse:3.3.3
+FROM ecohealthallinace/geoverse:3.3.3
 MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 
 ## Setup SSH server
 # Install packages
-RUN apt-get -y install openssh-server \
- && mkdir /var/run/sshd \
-# SSH login fix. Otherwise user is kicked off after login
- && sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
- && /etc/init.d/ssh restart
- && /etc/init.d/cron restart
+RUN apt-get update && apt-get -y install openssh-server supervisor\
+  && mkdir -p /var/run/sshd /var/log/supervisor \
 
+  ## EXTRAORDINARILY UNSAFE SSH CONFIGS FOR EARLY TESTING
+  && sed -i 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config \
+  && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config \
+  && echo "AllowUsers rstudio" >> /etc/ssh/sshd_config
 
-EXPOSE 22
+EXPOSE 22 8787
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+CMD ["/usr/bin/supervisord"]

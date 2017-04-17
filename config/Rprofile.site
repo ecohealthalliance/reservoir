@@ -1,0 +1,23 @@
+# R Startup configuration
+
+options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl')
+
+
+# Configure httr to perform out-of-band authentication if HTTR_LOCALHOST
+# is not set since a redirect to localhost may not work depending upon
+# where this Docker container is running.
+if(is.na(Sys.getenv("HTTR_LOCALHOST", unset=NA))) {
+  options(httr_oob_default = TRUE)
+}
+
+.First <- function() {
+  ("\014")
+  message("Welcome to *reservoir*, the EcoHealth Alliance Modeling &"\n,
+      "Analytics machine image. Please read our users' guide at\n",
+      "https://github.com/ecohealthalliance/eha-servers.\n",
+      "\n",
+      R.version$version.string, "\n",
+      "Cores available: ", parallel::detectCores(),"\n"
+      )
+
+}

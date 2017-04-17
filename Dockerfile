@@ -1,10 +1,12 @@
 FROM ecohealthalliance/geoverse:latest
 MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 
-## Setup SSH server
-# Install packages
-RUN apt-get update && apt-get -y install openssh-server supervisor\
-  && mkdir -p /var/run/sshd /var/log/supervisor \
+## Setup SSH server. s6 supervisor already installed for RStudio, so
+## just create the run and finish scripts
+RUN mkdir -p /var/run/sshd \
+  && mkdir -p /etc/services.d/sshd \
+  && echo '#!/bin/bash \nexec /usr/sbin/sshd -D' > /etc/services.d/sshd/run \
+  && echo '#!/bin/bash \n service ssh stop' > /etc/services.d/sshd/finish \
 
   ## EXTRAORDINARILY UNSAFE SSH CONFIGS FOR EARLY TESTING
   && sed -i 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config \
@@ -12,5 +14,3 @@ RUN apt-get update && apt-get -y install openssh-server supervisor\
   && echo "AllowUsers rstudio" >> /etc/ssh/sshd_config
 
 EXPOSE 22 8787
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-CMD ["/usr/bin/supervisord"]

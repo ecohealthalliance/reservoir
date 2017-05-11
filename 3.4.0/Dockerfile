@@ -1,4 +1,4 @@
-FROM ecohealthalliance/rgrass7:latest
+FROM ecohealthalliance/rgrass7:3.4.0
 MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 
 ## Other possible things to install: python, go, julia, node

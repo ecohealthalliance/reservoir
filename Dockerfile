@@ -8,8 +8,6 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
   && apt-get update && apt-get install -y --force-yes --no-install-recommends  \
 ## Shell tools
   curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release\
-## R library dependencies
-  libv8-3.14-dev \
 ## non-apt stuff
   # micro
 && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \

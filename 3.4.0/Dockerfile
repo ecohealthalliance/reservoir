@@ -38,8 +38,7 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
     && echo "AllowUsers rstudio" >> /etc/ssh/sshd_config
 
 COPY config ./
-RUN chmod +x /motd.sh \
-&& ./motd.sh > /etc/motd \
+RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd \
 && mv -f rsession.conf /etc/rstudio/rsession.conf \
 && mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
 && mv -f bash_settings.sh /etc/bash.bashrc \

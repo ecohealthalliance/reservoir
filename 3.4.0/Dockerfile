@@ -9,7 +9,7 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_8.0/ /' > /etc/apt/sources.list.d/fish.list \
   && apt-get update && apt-get install -y --force-yes --no-install-recommends --no-upgrade \
 ## Shell tools
-  curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release \
+  curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh \
 ## R package dependencies
   libv8-dev \
   default-jdk \
@@ -35,7 +35,7 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
     ## EXTRAORDINARILY UNSAFE SSH CONFIGS FOR EARLY TESTING
     && sed -i 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config \
     && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config \
-    && echo "AllowUsers rstudio" >> /etc/ssh/sshd_config
+    && echo "AllowGroups staff" >> /etc/ssh/sshd_config
 
 COPY config ./
 RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd \

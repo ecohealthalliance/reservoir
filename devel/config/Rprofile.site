@@ -12,7 +12,7 @@ if(is.na(Sys.getenv("HTTR_LOCALHOST", unset=NA))) {
 
 .First <- function() {
   ("\014")
-  message("Welcome to *reservoir*, the EcoHealth Alliance Modeling &"\n,
+  message("Welcome to *reservoir*, the EcoHealth Alliance Modeling &\n",
       "Analytics machine image. Please read our users' guide at\n",
       "https://github.com/ecohealthalliance/eha-servers.\n",
       "\n",

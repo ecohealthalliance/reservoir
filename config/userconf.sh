@@ -7,7 +7,19 @@ USERID=${USERID:=1000}
 GROUPID=${GROUPID:=1000}
 ROOT=${ROOT:=FALSE}
 UMASK=${UMASK:=022}
+USERS_DIRECTORY=${USERS_DIRECTORY="/blah"}
 
+if [ -d "$USERS_DIRECTORY" ]; then
+  cat $USERS_DIRECTORY/passwd-add >> /etc/passwd
+  cat $USERS_DIRECTORY/shadow-add >> /etc/shadow
+  cat $USERS_DIRECTORY/group-add >> /etc/group
+  cat $USERS_DIRECTORY/gshadow-add >> /etc/gshadow
+  cat $USERS_DIRECTORY/sudo_accts | xargs -I {} usermod -a -G sudo {}
+  echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+  cut -d: -f1 $USERS_DIRECTORY/passwd-add | xargs -I {} usermod -a -G staff {}
+  cut -d: -f1 $USERS_DIRECTORY/passwd-add | xargs -I {} chown -R {} /home/{}
+  userdel rstudio
+fi
 
 if [ "$USERID" -lt 1000 ]
 # Probably a macOS user, https://github.com/rocker-org/rocker/issues/205
@@ -23,6 +35,7 @@ if [ "$USERID" -lt 1000 ]
     fi
 fi
 
+if [! -d "$USERS_DIRECTORY" ]; then
 if [ "$USERID" -ne 1000 ]
 ## Configure user with a different USERID if requested.
   then
@@ -70,10 +83,6 @@ if [ "$UMASK" -ne 022 ]
     echo "Sys.umask(mode=$UMASK)" >> /home/$USER/.Rprofile
 fi
 
-if [ "$USER" == "rstudio" ]
-  then
-    chsh -s /bin/bash $USER
-    sudo adduser $USER sudo
 fi
 ## add these to the global environment so they are avialable to the RStudio user
 echo "HTTR_LOCALHOST=$HTTR_LOCALHOST" >> /etc/R/Renviron.site

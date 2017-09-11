@@ -2,6 +2,10 @@
 
 options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl')
 
+options(rasterTmpTime = 1, rasterMaxMemory = 1e10)
+
+if(!dir.exists(path.expand("~/.tmp"))) dir.create(path.expand("~/.tmp"))
+unixtools::set.tempdir(path.expand("~/.tmp"))
 
 # Configure httr to perform out-of-band authentication if HTTR_LOCALHOST
 # is not set since a redirect to localhost may not work depending upon

@@ -7,7 +7,7 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_8.0/ /' > /etc/apt/sources.list.d/fish.list \
   && apt-get update && apt-get install -y --force-yes --no-install-recommends --no-upgrade \
 ## Shell tools
-  curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh \
+  curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh nginx \
 ## R package dependencies
   libv8-dev \
   default-jdk \
@@ -23,7 +23,7 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
   && rm -rf /var/lib/apt/lists/ \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
 
-  ## Setup SSH server. s6 supervisor already installed for RStudio, so
+  ## Setup SSH + NGINX server. s6 supervisor already installed for RStudio, so
   ## just create the run and finish scripts
     && mkdir -p /var/run/sshd \
     && mkdir -p /etc/services.d/sshd \
@@ -33,11 +33,20 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
     ## EXTRAORDINARILY UNSAFE SSH CONFIGS FOR EARLY TESTING
     && sed -i 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config \
     && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config \
-    && echo "AllowGroups staff" >> /etc/ssh/sshd_config
+    && echo "AllowGroups staff" >> /etc/ssh/sshd_config \
     
+
+  ## Setup NGINX server. s6 supervisor already installed for RStudio, so
+  ## just create the run and finish scripts
+    && mkdir -p /var/run/nginx \
+    && mkdir -p /etc/services.d/nginx \
+    && echo '#!/bin/bash \n service nginx start' > /etc/services.d/nginx/run \
+    && echo '#!/bin/bash \n service nginx stop' > /etc/services.d/nginx/finish \
+    && chown -R nginx:www-data /var/lib/nginx
 
 COPY config ./
 RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd \
+&& mv -f nginx.default /etc/nginx/sites-enabled/default \
 && mv -f rsession.conf /etc/rstudio/rsession.conf \
 && mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
 && mv -f bash_settings.sh /etc/bash.bashrc \
@@ -46,4 +55,4 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd \
 && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
 && echo 'set -g default-terminal "screen-256color"' >> /usr/share/byobu/profiles/tmux
 
-EXPOSE 22 8787
+EXPOSE 22 8787 80

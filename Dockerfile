@@ -14,6 +14,8 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
   default-jre \
   libnlopt-dev \
   r-cran-lme4 \
+  grass grass-doc grass-dev \
+  r-cran-rgrass7 \
 ## non-apt stuff
   # micro
 && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \

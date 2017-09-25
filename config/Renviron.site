@@ -1,2 +1,3 @@
 IS_RESERVOIR=true
 TMPDIR=~/.tmp
+R_LIBS_USER=~/R/library

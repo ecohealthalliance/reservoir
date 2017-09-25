@@ -4,7 +4,7 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 ## Other possible things to install: python, go, julia, node
 
 ## Install additional packages
-RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_8.0/ /' > /etc/apt/sources.list.d/fish.list \
+RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_9.0/ /' > /etc/apt/sources.list.d/fish.list \
   && apt-get update && apt-get install -y --force-yes --no-install-recommends --no-upgrade \
 ## Shell tools
   curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh nginx \

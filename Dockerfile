@@ -15,16 +15,15 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
   libnlopt-dev \
   r-cran-lme4 \
   grass grass-doc grass-dev \
-  r-cran-rgrass7 \
 ## non-apt stuff
   # micro
 && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \
 ## GitHub pkgs
-&& Rscript -e "devtools::install_github('s-u/unixtools')" \
+&& installGithub.R s-u/unixtools \
 ## cleanup
   && . /etc/environment \
   && R CMD javareconf \
-  && install2.r -e -r $MRAN rJava \
+  && install2.r -e -r $MRAN rJava rgrass7 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \

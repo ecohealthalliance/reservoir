@@ -14,6 +14,7 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
   default-jre \
   libnlopt-dev \
   r-cran-lme4 \
+  libglpk-dev \ #for Rglpk integer programming
   grass grass-doc grass-dev \
 ## non-apt stuff
   # micro

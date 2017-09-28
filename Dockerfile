@@ -14,7 +14,7 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
   default-jre \
   libnlopt-dev \
   r-cran-lme4 \
-  libglpk-dev \ #for Rglpk integer programming
+  libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 
   grass grass-doc grass-dev \
 ## non-apt stuff
   # micro
@@ -24,7 +24,7 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
 ## cleanup
   && . /etc/environment \
   && R CMD javareconf \
-  && install2.r -e -r $MRAN rJava rgrass7 \
+  && install2.r -e -r $MRAN rJava rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \

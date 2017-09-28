@@ -43,14 +43,13 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
 
 COPY config ./
 RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd \
-&& mv -f nginx.default /etc/nginx/sites-enabled/default \
 && mv -f rsession.conf /etc/rstudio/rsession.conf \
 && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
-&& mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
 && mv -f bash_settings.sh /etc/bash.bashrc \
 && mv -f userconf.sh /etc/cont-init.d/conf \
 && mv -f byobu_status /usr/share/byobu/status/status \
 && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
 && echo 'set -g default-terminal "screen-256color"' >> /usr/share/byobu/profiles/tmux
+
 
 EXPOSE 22 8787

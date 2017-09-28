@@ -9,11 +9,7 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
 ## Shell tools
   curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh nginx gdebi-core \
 ## R package dependencies
-  libv8-dev \
-  default-jdk \
-  default-jre \
   libnlopt-dev \
-  r-cran-lme4 \
   libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 
   grass grass-doc grass-dev \
 ## non-apt stuff
@@ -28,7 +24,7 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
 ## cleanup
   && . /etc/environment \
   && R CMD javareconf \
-  && install2.r -e -r $MRAN rJava rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony \
+  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \

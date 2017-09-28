@@ -7,7 +7,7 @@ options(rasterTmpTime = 1, rasterMaxMemory = 1e10)
 if(!dir.exists(path.expand("~/tmp"))) dir.create(path.expand("~/tmp"))
 unixtools::set.tempdir(path.expand("~/tmp"))
 
-if(!dir.exists(Sys.getenv("R_LIBS_USER"))) dir.create(Sys.getenv("R_LIBS_USER"))
+if(!dir.exists(Sys.getenv("R_LIBS_USER"))) dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)
 .libPaths(Sys.getenv("R_LIBS_USER"))
 
 # Configure httr to perform out-of-band authentication if HTTR_LOCALHOST

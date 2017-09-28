@@ -7,7 +7,7 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_9.0/ /' > /etc/apt/sources.list.d/fish.list \
   && apt-get update && apt-get install -y --force-yes --no-install-recommends --no-upgrade \
 ## Shell tools
-  curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh nginx \
+  curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh nginx gdebi-core \
 ## R package dependencies
   libv8-dev \
   default-jdk \
@@ -19,6 +19,10 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
 ## non-apt stuff
   # micro
 && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \
+## RStudio preview version
+&& wget https://s3.amazonaws.com/rstudio-dailybuilds/rstudio-server-stretch-1.1.375-amd64.deb \
+&& dpkg -i rstudio-server-stretch-1.1.375-amd64.deb \
+&& rm rstudio-server-stretch-1.1.375-amd64.deb \
 ## GitHub pkgs
 && installGithub.r s-u/unixtools \
 ## cleanup

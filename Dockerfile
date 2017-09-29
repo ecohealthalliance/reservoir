@@ -3,6 +3,8 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 
 ## Other possible things to install: python, go, julia, node
 
+ADD latest-rstudio-preview.R /latest-rstudio-preview.R
+
 ## Install additional packages
 RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_9.0/ /' > /etc/apt/sources.list.d/fish.list \
   && apt-get update && apt-get install -y --force-yes --no-install-recommends --no-upgrade \
@@ -16,9 +18,9 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
   # micro
 && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \
 ## RStudio preview version
-&& wget https://s3.amazonaws.com/rstudio-dailybuilds/rstudio-server-stretch-1.1.375-amd64.deb \
-&& dpkg -i rstudio-server-stretch-1.1.375-amd64.deb \
-&& rm rstudio-server-stretch-1.1.375-amd64.deb \
+&& Rscript latest-rstudio-preview.R \
+&& dpkg -i rstudio-server-preview-stretch-amd64.deb \
+&& rm rstudio-server-preview-stretch-amd64.deb latest-rstudio-preview.R \
 ## GitHub pkgs
 && installGithub.r s-u/unixtools \
 ## cleanup

@@ -43,7 +43,7 @@ RUN mkdir -p /var/run/sshd \
 ## Add and run config files
 
 COPY config ./
-RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd \
+RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f rsession.conf /etc/rstudio/rsession.conf \
   && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
   && mv -f bash_settings.sh /etc/bash.bashrc \

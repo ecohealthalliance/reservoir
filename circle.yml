@@ -6,4 +6,5 @@ machine:
 
 test:
   override:
-    - make 
+    - docker build -t reservoir .
+

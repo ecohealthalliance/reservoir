@@ -16,7 +16,9 @@ if [ -d "$USERS_DIRECTORY" ]; then
   cat $USERS_DIRECTORY/gshadow-add >> /etc/gshadow
   cat $USERS_DIRECTORY/sudo_accts | xargs -I {} usermod -a -G sudo {}
   echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-##  cut -d: -f1 $USERS_DIRECTORY/passwd-add | xargs -I {} usermod -a -G staff {}
+  groupadd ssh-users
+  groupadd nfs-users
+  cut -d: -f1 $USERS_DIRECTORY/passwd-add | xargs -I {} usermod -a -G ssh-users,nfs-users {}
   cut -d: -f1 $USERS_DIRECTORY/passwd-add | xargs -I {} chown -R {} /home/{}
   userdel rstudio
 fi

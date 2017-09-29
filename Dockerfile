@@ -41,7 +41,7 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
     ## EXTRAORDINARILY UNSAFE SSH CONFIGS FOR EARLY TESTING
     && sed -i 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config \
     && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config \
-    && echo "AllowGroups share" >> /etc/ssh/sshd_config
+    && echo "AllowGroups ssh-users" >> /etc/ssh/sshd_config
 
 COPY config ./
 RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd \

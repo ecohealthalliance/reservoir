@@ -4,7 +4,7 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 ## Install stuff
 
 ### Shiny
-RUN export ADD=shiny && bash /etc/cont-init.d/add
+#RUN export ADD=shiny && bash /etc/cont-init.d/add
 ADD latest-rstudio-preview.R /latest-rstudio-preview.R
 ### Shell tools
 RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_9.0/ /' > /etc/apt/sources.list.d/fish.list \
@@ -46,7 +46,7 @@ RUN mkdir -p /var/run/sshd \
 COPY config ./
 RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f rsession.conf /etc/rstudio/rsession.conf \
-  && mv -f shiny-server.conf /etc/shiny-server/shiny-server.conf \
+#  && mv -f shiny-server.conf /etc/shiny-server/shiny-server.conf \
   && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
   && mv -f bash_settings.sh /etc/bash.bashrc \
   && mv -f userconf.sh /etc/cont-init.d/conf \

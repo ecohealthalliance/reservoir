@@ -46,7 +46,7 @@ RUN mkdir -p /var/run/sshd \
 COPY config ./
 RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f rsession.conf /etc/rstudio/rsession.conf \
-#  && mv -f shiny-server.conf /etc/shiny-server/shiny-server.conf \
+  && mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
   && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
   && mv -f bash_settings.sh /etc/bash.bashrc \
   && mv -f userconf.sh /etc/cont-init.d/conf \

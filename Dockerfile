@@ -14,6 +14,10 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
      libnlopt-dev \
      libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 
       grass grass-doc grass-dev \
+      python-setuptools python-dev build-essential git-core \
+## Python stuff
+ && easy_install pip \
+ && pip install virtualenv \
 ### non-apt stuff (micro)
   && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \
 ### RStudio preview version 
@@ -24,7 +28,8 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
   && . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
-  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 \
+  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras \
+  && Rscript -e "keras::install_keras()"
 ### cleanup
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \

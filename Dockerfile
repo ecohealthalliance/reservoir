@@ -7,14 +7,20 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 #RUN export ADD=shiny && bash /etc/cont-init.d/add
 ADD latest-rstudio-preview.R /latest-rstudio-preview.R
 ### Shell tools
-RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_9.0/ /' > /etc/apt/sources.list.d/fish.list \
-  && apt-get update && apt-get install -y --force-yes --no-install-recommends --no-upgrade \
-     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh nginx gdebi-core \
+RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_9.0/ /' > /etc/apt/sources.list.d/fish.list \
+ && apt-get update && apt-get install -y --force-yes --no-install-recommends --no-upgrade \
+     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv gnupg apt-transport-https \
 ### R package dependencies
      libnlopt-dev \
      libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 
       grass grass-doc grass-dev \
       python-setuptools python-dev build-essential git-core \
+### MonetDB
+ && echo "deb http://dev.monetdb.org/downloads/deb/ stretch monetdb" > /etc/apt/sources.list.d/monetdb.list \
+ && echo "deb-src http://dev.monetdb.org/downloads/deb/ stretch monetdb" >> /etc/apt/sources.list.d/monetdb.list \
+ && wget --output-document=- https://www.monetdb.org/downloads/MonetDB-GPG-KEY | sudo apt-key add - \
+ && apt-get update && sudo apt-get install -y --allow-unauthenticated --force-yes --no-install-recommends --no-upgrade \
+      monetdb5-sql monetdb-client \
 ## Python stuff
  && easy_install pip \
  && pip install virtualenv \
@@ -28,8 +34,7 @@ RUN echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2
   && . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
-  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras \
-  && Rscript -e "keras::install_keras()" \
+  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras MonetDBLite \
 ### cleanup
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \

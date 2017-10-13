@@ -34,7 +34,7 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
   && . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
-  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras MonetDBLite \
+  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras MonetDBLite rstan \
 ### cleanup
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \

@@ -22,14 +22,14 @@ if(is.na(Sys.getenv("HTTR_LOCALHOST", unset=NA))) {
 }
 
 ## Startup message
-.First <- function() {
-  ("\014")
-  message("Welcome to *reservoir*, the EcoHealth Alliance Modeling &\n",
-      "Analytics machine image. Please read our users' guide at\n",
-      "https://github.com/ecohealthalliance/eha-servers.\n",
-      "\n",
-      R.version$version.string, "\n",
-      "Cores available: ", parallel::detectCores(),"\n"
-      )
-
-}
+#.First <- function() {
+#  ("\014")
+#  message("Welcome to *reservoir*, the EcoHealth Alliance Modeling &\n",
+#      "Analytics machine image. Please read our users' guide at\n",
+#      "https://github.com/ecohealthalliance/eha-servers.\n",
+#      "\n",
+#      R.version$version.string, "\n",
+#      "Cores available: ", parallel::detectCores(),"\n"
+#      )
+#
+#}

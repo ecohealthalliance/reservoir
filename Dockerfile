@@ -30,11 +30,17 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
   && Rscript latest-rstudio-preview.R \
   && dpkg -i rstudio-server-preview-stretch-amd64.deb \
   && rm rstudio-server-preview-stretch-amd64.deb latest-rstudio-preview.R \
+  
+### Gurobi
+  && wget http://packages.gurobi.com/7.5/gurobi7.5.2_linux64.tar.gz \
+  && tar xvfz gurobi7.5.2_linux64.tar.gz -C /opt \
+  && rm gurobi7.5.2_linux64.tar.gz \
+  
 ### R config and packages
   && . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
-  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras MonetDBLite rstan \
+  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras MonetDBLite rstan gurobi \
 ### cleanup
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \
@@ -62,6 +68,7 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f bash_settings.sh /etc/bash.bashrc \
   && mv -f userconf.sh /etc/cont-init.d/conf \
   && mv -f byobu_status /usr/share/byobu/status/status \
+  && mv -f gurobi.lic /opt/gurobi.lic \
   && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
   && echo 'set -g default-terminal "screen-256color"' >> /usr/share/byobu/profiles/tmux
 

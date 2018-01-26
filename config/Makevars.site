@@ -1,3 +1,4 @@
+VER=
 CCACHE=ccache
 CC=$(CCACHE) gcc$(VER)
 CXX=$(CCACHE) g++$(VER)

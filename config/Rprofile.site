@@ -1,7 +1,7 @@
 # R Startup configuration
 
 ## Set CRAN mirror
-options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl')
+options(repos = c(CRAN = 'https://mirrors.nics.utk.edu/cran/'), download.file.method = 'libcurl')
 
 ## Reduce raster tempfile generation
 options(rasterTmpTime = 1, rasterMaxMemory = 1e10)
@@ -33,3 +33,7 @@ if(is.na(Sys.getenv("HTTR_LOCALHOST", unset=NA))) {
 #      )
 #
 #}
+
+Sys.setenv(PATH=paste0(Sys.getenv("PATH"), ":/opt/gurobi752/linux64/bin"))
+Sys.setenv(GUROBI_HOME="/opt/gurobi752/linux64")
+Sys.setenv(LD_LIBRARY_PATH=paste0(Sys.getenv("LD_LIBRARY_PATH"), ":/opt/gurobi752/linux64/lib"))

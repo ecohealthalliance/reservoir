@@ -46,8 +46,8 @@ RUN export CC="ccache gcc"  \
   && export MAKE="make -j$(nproc)" \
   && . /etc/environment \
   && R CMD javareconf \
-  && installGithub.r s-u/unixtools \
-  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras MonetDBLite rstan \
+  && installGithub.r s-u/unixtools  rstudio/tensorflow rstudio/keras \
+  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan \
 ### cleanup
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \
@@ -71,6 +71,7 @@ RUN mkdir -p /var/run/sshd \
 COPY config ./
 RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f rsession.conf /etc/rstudio/rsession.conf \
+  && mv -f rserver.conf /etc/rstudio/rserver.conf \
   && mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
   && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
   && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site \

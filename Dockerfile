@@ -18,7 +18,7 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
 ### MonetDB
  && echo "deb http://dev.monetdb.org/downloads/deb/ stretch monetdb" > /etc/apt/sources.list.d/monetdb.list \
  && echo "deb-src http://dev.monetdb.org/downloads/deb/ stretch monetdb" >> /etc/apt/sources.list.d/monetdb.list \
- && wget --output-document=- https://www.monetdb.org/downloads/MonetDB-GPG-KEY | sudo apt-key add - \
+ && wget -q --output-document=- https://www.monetdb.org/downloads/MonetDB-GPG-KEY | sudo apt-key add - \
  && apt-get update && sudo apt-get install -y --allow-unauthenticated --force-yes --no-install-recommends --no-upgrade \
       monetdb5-sql monetdb-client \
 ## Python stuff
@@ -32,8 +32,8 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
   && rm rstudio-server-preview-stretch-amd64.deb latest-rstudio-preview.R \
   
 ### Gurobi
-  && wget http://packages.gurobi.com/7.5/gurobi7.5.2_linux64.tar.gz \
-  && tar xvfz gurobi7.5.2_linux64.tar.gz -C /opt \
+  && wget -q http://packages.gurobi.com/7.5/gurobi7.5.2_linux64.tar.gz \
+  && tar xfz gurobi7.5.2_linux64.tar.gz -C /opt \
   && rm gurobi7.5.2_linux64.tar.gz \
   
 ### R config and packages

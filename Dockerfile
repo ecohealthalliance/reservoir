@@ -9,7 +9,7 @@ ADD latest-rstudio-preview.R /latest-rstudio-preview.R
 ### Shell tools
 RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_9.0/ /' > /etc/apt/sources.list.d/fish.list \
  && apt-get update && apt-get install -y --force-yes --no-install-recommends --no-upgrade \
-     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv gnupg apt-transport-https \
+     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv gnupg apt-transport-https ccache \
 ### R package dependencies
      libnlopt-dev \
      libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 
@@ -58,6 +58,7 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f rsession.conf /etc/rstudio/rsession.conf \
   && mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
   && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
+  && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site \
   && mv -f bash_settings.sh /etc/bash.bashrc \
   && mv -f userconf.sh /etc/cont-init.d/conf \
   && mv -f byobu_status /usr/share/byobu/status/status \

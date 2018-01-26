@@ -1,0 +1,43 @@
+
+version: '2'
+
+services:
+  caddy:
+    image: joshix/caddy
+    links:
+      - rstudio
+      - netdata
+    volumes:
+      - "./site/:/var/www/html"
+      - "./.caddy/:/.caddy"
+    ports:
+      - "22051:22051"
+    restart: always
+    hostname: aegypti-caddy
+
+  rstudio:
+    image: "ecohealthalliance/reservoir:latest"
+    environment:
+      - USERS_DIRECTORY=/home/docker_accts
+    ports:
+      - "22022:22"
+      - "22088:8787"
+      - "60990-61000:60990-61000"
+    volumes:
+      - "/home:/home"
+#      - "/home/shiny:/srv/shiny-server"
+    restart: always
+    hostname: aegypti-reservoir
+    
+  netdata:
+    image: titpetric/netdata  
+    cap_add:
+      - SYS_PTRACE
+    volumes:
+      - "/proc:/host/proc:ro"
+      - "/sys:/host/sys:ro"
+      - "./netdata/netdata.conf:/etc/netdata/netdata.conf"
+      - "./netdata/health_alarm_notify.conf:/etc/netdata/health_alarm_notify.conf"
+    restart: always
+    hostname: aegypti-status
+  

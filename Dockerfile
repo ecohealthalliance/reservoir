@@ -37,7 +37,14 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
   && rm gurobi7.5.2_linux64.tar.gz
   
 ### R config and packages
-RUN . /etc/environment \
+RUN CC="ccache gcc" \
+  && CXX="ccache g++" \
+  && CXX11="ccache g++" \
+  && CXX14="ccache g++" \
+  && FC="ccache gfortran" \
+  && F77="ccache gfortran" \
+  && MAKE="make -j$(nproc)" \
+  && . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
   && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras MonetDBLite rstan \
@@ -46,7 +53,8 @@ RUN . /etc/environment \
   && rm -rf /var/lib/apt/lists/ \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
   && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", repos = NULL)' \
-  && installGithub.r fl0sch/ROI.plugin.gurobi
+  && installGithub.r fl0sch/ROI.plugin.gurobi \
+  && unset CC CXX CXX11 CXX14 FC F77 MAKE
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so
 ## just create the run and finish scripts

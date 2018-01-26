@@ -30,23 +30,32 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
   && Rscript latest-rstudio-preview.R \
   && dpkg -i rstudio-server-preview-stretch-amd64.deb \
   && rm rstudio-server-preview-stretch-amd64.deb latest-rstudio-preview.R \
+  && installGithub.r s-u/unixtools \
   
 ### Gurobi
   && wget -q http://packages.gurobi.com/7.5/gurobi7.5.2_linux64.tar.gz \
   && tar xfz gurobi7.5.2_linux64.tar.gz -C /opt \
   && rm gurobi7.5.2_linux64.tar.gz
-  
+
+# Set up config files
+COPY config ./
+RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
+  && mv -f rsession.conf /etc/rstudio/rsession.conf \
+  && mv -f rserver.conf /etc/rstudio/rserver.conf \
+  && mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
+  && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
+  && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site \
+  && mv -f bash_settings.sh /etc/bash.bashrc \
+  && mv -f userconf.sh /etc/cont-init.d/conf \
+  && mv -f byobu_status /usr/share/byobu/status/status \
+  && mv -f gurobi.lic /opt/gurobi.lic \
+  && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
+  && echo 'set -g default-terminal "screen-256color"' >> /usr/share/byobu/profiles/tmux
+
 ### R config and packages
-RUN export CC="ccache gcc"  \
-  && export CXX="ccache g++"  \
-  && export CXX11="ccache g++"  \
-  && export CXX14="ccache g++"  \
-  && export FC="ccache gfortran"  \
-  && export F77="ccache gfortran" \
-  && export MAKE="make -j$(nproc)" \
-  && . /etc/environment \
+RUN . /etc/environment \
   && R CMD javareconf \
-  && installGithub.r s-u/unixtools  rstudio/tensorflow rstudio/keras \
+  && installGithub.r rstudio/tensorflow rstudio/keras \
   && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan \
 ### cleanup
   && apt-get clean \
@@ -67,20 +76,6 @@ RUN mkdir -p /var/run/sshd \
   && echo "AllowGroups ssh-users" >> /etc/ssh/sshd_config
 
 ## Add and run config files
-
-COPY config ./
-RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
-  && mv -f rsession.conf /etc/rstudio/rsession.conf \
-  && mv -f rserver.conf /etc/rstudio/rserver.conf \
-  && mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
-  && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
-  && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site \
-  && mv -f bash_settings.sh /etc/bash.bashrc \
-  && mv -f userconf.sh /etc/cont-init.d/conf \
-  && mv -f byobu_status /usr/share/byobu/status/status \
-  && mv -f gurobi.lic /opt/gurobi.lic \
-  && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
-  && echo 'set -g default-terminal "screen-256color"' >> /usr/share/byobu/profiles/tmux
 
 ## Open ports
 

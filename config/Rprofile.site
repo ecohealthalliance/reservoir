@@ -8,7 +8,10 @@ options(rasterTmpTime = 1, rasterMaxMemory = 1e10)
 
 ## Set temp directory inside user folders
 if(!dir.exists(path.expand("~/tmp"))) dir.create(path.expand("~/tmp"))
-unixtools::set.tempdir(path.expand("~/tmp"))
+
+if(require(unixtools)) {
+  unixtools::set.tempdir(path.expand("~/tmp"))
+}
 
 ## Make sure users have home R libraries
 if(!dir.exists(Sys.getenv("R_LIBS_USER"))) dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)

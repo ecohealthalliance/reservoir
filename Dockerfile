@@ -34,10 +34,10 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
 ### Gurobi
   && wget -q http://packages.gurobi.com/7.5/gurobi7.5.2_linux64.tar.gz \
   && tar xfz gurobi7.5.2_linux64.tar.gz -C /opt \
-  && rm gurobi7.5.2_linux64.tar.gz \
+  && rm gurobi7.5.2_linux64.tar.gz
   
 ### R config and packages
-  && . /etc/environment \
+RUN . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
   && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras MonetDBLite rstan \

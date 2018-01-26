@@ -54,8 +54,8 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
 ### R config and packages
 RUN . /etc/environment \
   && R CMD javareconf \
-  && installGithub.r s-u/unixtools rstudio/tensorflow rstudio/keras \
-  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan \
+  && installGithub.r s-u/unixtools \
+  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras \
 ### cleanup
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \

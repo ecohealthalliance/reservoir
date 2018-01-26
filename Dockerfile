@@ -40,11 +40,12 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
   && . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
-  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras MonetDBLite rstan gurobi \
+  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras MonetDBLite rstan \
 ### cleanup
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \
-  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
+  && Rscript -e 'install.packages(file.path(Sys.getenv("GUROBI_HOME"), "R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz"), repos = NULL)' 
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so
 ## just create the run and finish scripts

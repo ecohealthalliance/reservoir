@@ -60,8 +60,7 @@ RUN . /etc/environment \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
-  && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", repos = NULL)' \
-  && unset CC CXX CXX11 CXX14 FC F77 MAKE
+  && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)' 
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so
 ## just create the run and finish scripts

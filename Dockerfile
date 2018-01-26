@@ -37,14 +37,14 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
   && rm gurobi7.5.2_linux64.tar.gz
   
 ### R config and packages
-ENV CC="ccache gcc" 
-ENV CXX="ccache g++" 
-ENV CXX11="ccache g++" 
-ENV CXX14="ccache g++" 
-ENV FC="ccache gfortran" 
-ENV F77="ccache gfortran"
-ENV MAKE="make -j$(nproc)"
-RUN . /etc/environment \
+RUN export CC="ccache gcc"  \
+  && export CXX="ccache g++"  \
+  && export CXX11="ccache g++"  \
+  && export CXX14="ccache g++"  \
+  && export FC="ccache gfortran"  \
+  && export F77="ccache gfortran" \
+  && export MAKE="make -j$(nproc)" \
+  && . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
   && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 reticulate tensorflow keras MonetDBLite rstan \

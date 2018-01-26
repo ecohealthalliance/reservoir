@@ -30,8 +30,7 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
   && Rscript latest-rstudio-preview.R \
   && dpkg -i rstudio-server-preview-stretch-amd64.deb \
   && rm rstudio-server-preview-stretch-amd64.deb latest-rstudio-preview.R \
-  && installGithub.r s-u/unixtools \
-  
+
 ### Gurobi
   && wget -q http://packages.gurobi.com/7.5/gurobi7.5.2_linux64.tar.gz \
   && tar xfz gurobi7.5.2_linux64.tar.gz -C /opt \
@@ -55,7 +54,7 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
 ### R config and packages
 RUN . /etc/environment \
   && R CMD javareconf \
-  && installGithub.r rstudio/tensorflow rstudio/keras \
+  && installGithub.r s-u/unixtools rstudio/tensorflow rstudio/keras \
   && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan \
 ### cleanup
   && apt-get clean \

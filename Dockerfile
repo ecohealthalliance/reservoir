@@ -53,11 +53,15 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
   && echo 'set -g default-terminal "screen-256color"' >> /usr/share/byobu/profiles/tmux
 
+## Set up ccache
+RUN mkdir /opt/.ccache \
+  && chmod -R 2777  /opt/.ccache/
+
 ### R config and packages
 RUN . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
-  && install2.r -e -r $MRAN rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras Rmpi \
+  && install2.r -e -r $MRAN Rmpi snow rlecuyer RcppArmadillo RcppEigen rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras \
 ### cleanup
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \

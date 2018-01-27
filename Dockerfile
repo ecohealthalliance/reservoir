@@ -15,8 +15,8 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
      libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 
       grass grass-doc grass-dev \
       python-setuptools python-dev build-essential git-core \
-      libtesseract-dev libleptonica-dev tesseract-ocr-eng \
- &&  apt-get -y build-dep r-cran-rmpi \
+      libtesseract-dev libleptonica-dev tesseract-ocr-eng libpoppler-cpp-dev \
+      build-dep r-cran-rmpi \
 ### MonetDB
  && echo "deb http://dev.monetdb.org/downloads/deb/ stretch monetdb" > /etc/apt/sources.list.d/monetdb.list \
  && echo "deb-src http://dev.monetdb.org/downloads/deb/ stretch monetdb" >> /etc/apt/sources.list.d/monetdb.list \

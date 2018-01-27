@@ -16,6 +16,7 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
       grass grass-doc grass-dev \
       python-setuptools python-dev build-essential git-core \
       libtesseract-dev libleptonica-dev tesseract-ocr-eng \
+ &&  apt-get -y --force-yes --no-install-recommends --no-upgrade build-dep r-cran-rmpi \
 ### MonetDB
  && echo "deb http://dev.monetdb.org/downloads/deb/ stretch monetdb" > /etc/apt/sources.list.d/monetdb.list \
  && echo "deb-src http://dev.monetdb.org/downloads/deb/ stretch monetdb" >> /etc/apt/sources.list.d/monetdb.list \

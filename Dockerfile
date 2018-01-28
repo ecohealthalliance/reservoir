@@ -69,7 +69,8 @@ RUN mkdir /opt/.ccache \
 RUN . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
-  && install2.r -e -r $MRAN V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras rJava \
+  && Rscript -e "withr::with_envvar(c('CCACHE'=''), withr::with_makevars(c('CCACHE'=''), install.packages('rJava')))" \
+  && install2.r -e -r $MRAN V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras \
 ### cleanup
   && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'  \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds 

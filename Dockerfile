@@ -70,11 +70,11 @@ RUN . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
   && Rscript -e "withr::with_envvar(c('CCACHE'=''), withr::with_makevars(c('CCACHE'=''), install.packages('rJava')))" \
-  && install2.r -e -r $MRAN V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras \
+  && install2.r -e -r $MRAN RcppArmadillo V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras \
   && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'  \
   && R -e "keras::install_keras()" \
 ## Cleanup
-  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds 
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages
 
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so

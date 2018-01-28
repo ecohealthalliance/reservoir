@@ -26,7 +26,7 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
       monetdb5-sql monetdb-client \
 ## Python stuff
  && easy_install pip \
- && pip install virtualenv \
+ && pip install virtualenv --no-cache-dir \
 ### non-apt stuff (micro)
   && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \
 ### RStudio preview version 
@@ -37,7 +37,9 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
 ### Gurobi
   && wget -q http://packages.gurobi.com/7.5/gurobi7.5.2_linux64.tar.gz \
   && tar xfz gurobi7.5.2_linux64.tar.gz -C /opt \
-  && rm gurobi7.5.2_linux64.tar.gz
+  && rm gurobi7.5.2_linux64.tar.gz \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/ 
 
 # Set up config files
 COPY config ./
@@ -67,12 +69,11 @@ RUN mkdir /opt/.ccache \
 RUN . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
-  && install2.r -e -r $MRAN RcppArmadillo RcppEigen rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras \
+  && install2.r -e -r $MRAN V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras rJava \
 ### cleanup
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/ \
-  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds \
-  && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)' 
+  && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'  \
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds 
+
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so
 ## just create the run and finish scripts

@@ -18,6 +18,7 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
       libtesseract-dev libleptonica-dev tesseract-ocr-eng libpoppler-cpp-dev \
       libopenmpi-dev \
       libgoogle-perftools-dev libprotoc-dev libprotobuf-dev protobuf-compiler golang-go graphviz \
+      python-pip python-virtualenv \
 ### MonetDB
  && echo "deb http://dev.monetdb.org/downloads/deb/ stretch monetdb" > /etc/apt/sources.list.d/monetdb.list \
  && echo "deb-src http://dev.monetdb.org/downloads/deb/ stretch monetdb" >> /etc/apt/sources.list.d/monetdb.list \
@@ -25,8 +26,7 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
  && apt-get update && sudo apt-get install -y --allow-unauthenticated --force-yes --no-install-recommends --no-upgrade \
       monetdb5-sql monetdb-client \
 ## Python stuff
- && easy_install pip \
- && pip install virtualenv --no-cache-dir \
+ && pip install h5py pyyaml requests Pillow scipy --no-cache-dir \
 ### non-apt stuff (micro)
   && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \
 ### RStudio preview version 
@@ -71,8 +71,9 @@ RUN . /etc/environment \
   && installGithub.r s-u/unixtools \
   && Rscript -e "withr::with_envvar(c('CCACHE'=''), withr::with_makevars(c('CCACHE'=''), install.packages('rJava')))" \
   && install2.r -e -r $MRAN V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras \
-### cleanup
   && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'  \
+  && R -e "keras::install_keras()" \
+## Cleanup
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds 
 
 

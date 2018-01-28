@@ -1,5 +1,3 @@
-CCACHE_DIR="/opt/.ccache"
-CCACHE_UMASK=002
 IS_RESERVOIR=true
 TEMPDIR=~/.tmp
 R_LIBS_USER=~/R/%p-library/%v

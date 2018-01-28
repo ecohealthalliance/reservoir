@@ -56,15 +56,6 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
   && echo 'set -g default-terminal "screen-256color"' >> /usr/share/byobu/profiles/tmux
 
-## Set up ccache
-ENV CCACHE_DIR=/opt/.ccache
-ENV CCACHE_UMASK=002
-RUN mkdir /opt/.ccache \
-  && chmod -R 2777  /opt/.ccache/ \
-  && xargs chmod g+s /opt/.ccache \
-  && unset CCACHE_HARDLINK
-
-
 ### R config and packages
 RUN . /etc/environment \
   && R CMD javareconf \
@@ -74,7 +65,8 @@ RUN . /etc/environment \
   && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'  \
   && Rscript -e "keras::install_keras()" \
 ## Cleanup
-  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages \
+  && ccache -C
 
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so

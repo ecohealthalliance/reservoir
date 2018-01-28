@@ -17,6 +17,7 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
       python-setuptools python-dev build-essential git-core \
       libtesseract-dev libleptonica-dev tesseract-ocr-eng libpoppler-cpp-dev \
       libopenmpi-dev \
+      libgoogle-perftools-dev libprotoc-dev libprotobuf-dev protobuf-compiler golang-go graphviz \
 ### MonetDB
  && echo "deb http://dev.monetdb.org/downloads/deb/ stretch monetdb" > /etc/apt/sources.list.d/monetdb.list \
  && echo "deb-src http://dev.monetdb.org/downloads/deb/ stretch monetdb" >> /etc/apt/sources.list.d/monetdb.list \
@@ -61,7 +62,7 @@ RUN mkdir /opt/.ccache \
 RUN . /etc/environment \
   && R CMD javareconf \
   && installGithub.r s-u/unixtools \
-  && install2.r -e -r $MRAN Rmpi snow rlecuyer RcppArmadillo RcppEigen rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras \
+  && install2.r -e -r $MRAN RcppArmadillo RcppEigen rJava V8 rgrass7 Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras \
 ### cleanup
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \

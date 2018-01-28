@@ -55,8 +55,13 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && echo 'set -g default-terminal "screen-256color"' >> /usr/share/byobu/profiles/tmux
 
 ## Set up ccache
+ENV CCACHE_DIR=/opt/.ccache
+ENV CCACHE_UMASK=002
 RUN mkdir /opt/.ccache \
-  && chmod -R 2777  /opt/.ccache/
+  && chmod -R 2777  /opt/.ccache/ \
+  && xargs chmod g+s /opt/.ccache \
+  && unset CCACHE_HARDLINK
+
 
 ### R config and packages
 RUN . /etc/environment \

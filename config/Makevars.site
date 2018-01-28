@@ -1,4 +1,5 @@
-CCACHE_DIR=/opt/.ccache
+CCACHE_DIR="/opt/.ccache"
+CCACHE_UMASK=002
 VER=
 CCACHE=ccache
 CC=$(CCACHE) gcc$(VER)

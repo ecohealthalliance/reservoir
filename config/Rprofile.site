@@ -1,7 +1,7 @@
 # R Startup configuration
 
 ## Set CRAN mirror
-options(repos = c(CRAN = 'https://mirrors.nics.utk.edu/cran/'), download.file.method = 'libcurl')
+options(repos = c(CRAN = "http://cran.rstudio.com"))
 
 ## Reduce raster tempfile generation
 options(rasterTmpTime = 1, rasterMaxMemory = 1e10)

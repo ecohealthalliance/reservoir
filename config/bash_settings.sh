@@ -50,6 +50,4 @@ export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\]$ "
 export GUROBI_HOME="/opt/gurobi752/linux64"
 export PATH="${PATH}:${GUROBI_HOME}/bin"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${GUROBI_HOME}/lib"
-export CCACHE_DIR="/opt/.ccache"
-export CCACHE_UMASK=002
-
+ 

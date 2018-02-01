@@ -22,7 +22,7 @@ services:
     ports:
       - "22022:22"
       - "22088:8787"
-      - "60990-61000:60990-61000"
+      - "60990-61000:60990-61000/udp"
     volumes:
       - "/home:/home"
 #      - "/home/shiny:/srv/shiny-server"

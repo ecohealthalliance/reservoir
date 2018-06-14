@@ -14,6 +14,7 @@ services:
       - "22051:22051"
     restart: always
     hostname: aegypti-caddy
+    cpu_shares: 64
 
   rstudio:
     image: "ecohealthalliance/reservoir:latest"
@@ -40,4 +41,4 @@ services:
       - "./netdata/health_alarm_notify.conf:/etc/netdata/health_alarm_notify.conf"
     restart: always
     hostname: aegypti-status
-  
+    cpu_shares: 64

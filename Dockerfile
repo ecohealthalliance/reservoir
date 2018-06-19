@@ -52,6 +52,7 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site \
   && mv -f bash_settings.sh /etc/bash.bashrc \
   && mv -f userconf.sh /etc/cont-init.d/conf \
+  && mv -f ccache.conf /etc/ccache.conf
   && mv -f byobu_status /usr/share/byobu/status/status \
   && mv -f gurobi.lic /opt/gurobi752/gurobi.lic \
   && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \

@@ -4,7 +4,7 @@
 options(repos = c(CRAN = "https://cran.rstudio.com"))
 
 ## Reduce raster tempfile generation
-options(rasterTmpTime = 1, rasterMaxMemory = 1e10)
+options(rasterTmpTime = 1, rasterMaxMemory = 1e10, Ncpus=8)
 
 ## Set temp directory inside user folders
 if(!dir.exists(path.expand("~/tmp"))) dir.create(path.expand("~/tmp"))

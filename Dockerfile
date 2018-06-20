@@ -26,6 +26,7 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
  && echo "deb http://dev.monetdb.org/downloads/deb/ stretch monetdb" > /etc/apt/sources.list.d/monetdb.list \
  && echo "deb-src http://dev.monetdb.org/downloads/deb/ stretch monetdb" >> /etc/apt/sources.list.d/monetdb.list \
  && wget -q --output-document=- https://www.monetdb.org/downloads/MonetDB-GPG-KEY | sudo apt-key add - \
+ && apt-get update \
  && apt-get install -y --allow-unauthenticated --force-yes --no-install-recommends --no-upgrade \
       monetdb5-sql monetdb-client \
 ## Python stuff

@@ -8,12 +8,14 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 ADD latest-rstudio-preview.R /latest-rstudio-preview.R
 ### Shell tools
 RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_9.0/ /' > /etc/apt/sources.list.d/fish.list \
+ && apt-get -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade install software-properties-common \
  && add-apt-repository ppa:apt-fast/stable \
  && apt-get update \
  && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade apt-fast \
  && apt-fast install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
      curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv gnupg apt-transport-https ccache golang-1.8 ruby-full \
 ### R package dependencies
+     libclang-dev \
      libnlopt-dev \
      libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 
       grass grass-doc grass-dev \

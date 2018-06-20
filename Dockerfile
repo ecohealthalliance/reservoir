@@ -8,9 +8,12 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 ADD latest-rstudio-preview.R /latest-rstudio-preview.R
 ### Shell tools
 RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_9.0/ /' > /etc/apt/sources.list.d/fish.list \
+ && echo "deb http://dev.monetdb.org/downloads/deb/ stretch monetdb" > /etc/apt/sources.list.d/monetdb.list \
+ && echo "deb-src http://dev.monetdb.org/downloads/deb/ stretch monetdb" >> /etc/apt/sources.list.d/monetdb.list \
+ && wget -q --output-document=- https://www.monetdb.org/downloads/MonetDB-GPG-KEY | sudo apt-key add - \
  && apt-get update \
  && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
-     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv gnupg apt-transport-https ccache golang-1.8 ruby-full \
+     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv gnupg apt-transport-https ccache golang-1.8 ruby-full monetdb5-sql monetdb-client aria2 \
 ### R package dependencies
      libclang-dev \
      libnlopt-dev \
@@ -21,14 +24,6 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
       libopenmpi-dev \
       libgoogle-perftools-dev libprotoc-dev libprotobuf-dev protobuf-compiler golang-go graphviz \
       python-pip \
-### Hub
-### MonetDB
- && echo "deb http://dev.monetdb.org/downloads/deb/ stretch monetdb" > /etc/apt/sources.list.d/monetdb.list \
- && echo "deb-src http://dev.monetdb.org/downloads/deb/ stretch monetdb" >> /etc/apt/sources.list.d/monetdb.list \
- && wget -q --output-document=- https://www.monetdb.org/downloads/MonetDB-GPG-KEY | sudo apt-key add - \
- && apt-get update \
- && apt-get install -y --allow-unauthenticated --force-yes --no-install-recommends --no-upgrade \
-      monetdb5-sql monetdb-client \
 ## Python stuff
  && pip install virtualenv --no-cache-dir \
 ### non-apt stuff (micro)

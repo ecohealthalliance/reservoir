@@ -1,4 +1,4 @@
-MAKEFLAGS = -j4
+MAKEFLAGS+="-j $(shell nproc)"
 VER=
 CCACHE=ccache
 CC=$(CCACHE) gcc$(VER)
@@ -7,3 +7,4 @@ CXX11=$(CCACHE) g++$(VER)
 CXX14=$(CCACHE) g++$(VER)
 FC=$(CCACHE) gfortran$(VER)
 F77=$(CCACHE) gfortran$(VER)
+

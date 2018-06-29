@@ -1,4 +1,7 @@
-MAKEFLAGS+="-j $(shell nproc)"
+NPROC=$(shell nproc)
+NPROC_MIN=$(shell $(($NPROC>4?4:$NPROC)))
+MAKE=nice -n 10 make
+MAKEFLAGS+="-j $(NPROC_MIN)"
 VER=
 CCACHE=ccache
 CC=$(CCACHE) gcc$(VER)

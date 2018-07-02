@@ -24,11 +24,9 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
       libtesseract-dev libleptonica-dev tesseract-ocr-eng libpoppler-cpp-dev \
       libopenmpi-dev \
       libgoogle-perftools-dev libprotoc-dev libprotobuf-dev protobuf-compiler golang-go graphviz \
-      python-pip \
+      python-virtualenv python-pip \
       monetdb5-sql monetdb-client \
-## Python stuff
- && pip install virtualenv --no-cache-dir \
- && pip install h5py pyyaml requests Pillow scipy tensorflow keras \
+      cmake libncurses5-dev \
 ### non-apt stuff (micro)
   && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \
 ### RStudio preview version 
@@ -43,9 +41,39 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ 
 
-ENV GUROBI_HOME="/opt/gurobi752/linux64" \
-  PATH=${GUROBI_HOME}/bin:${PATH} \
-  LD_LIBRARY_PATH=${GUROBI_HOME}/lib:${LD_LIBRARY_PATH}
+#CUDA/GPU Stuff
+RUN wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub \
+ && echo "47217c49dcb9e47a8728b354450f694c9898cd4a126173044a69b1e9ac0fba96  /root/manual/7fa2af80.pub" | sha256sum -c --strict - \
+ && apt-key add /root/manual/7fa2af80.pub \
+ && wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.0.176-1_amd64.deb \
+ && dpkg -i /root/manual/cuda-repo-ubuntu1604_9.0.176-1_amd64.deb \
+ && echo 'deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /' > /etc/apt/sources.list.d/nvidia-ml.list \
+ && rm -rf /root/manual \
+ && apt-get update  && apt-get install --no-install-recommends -y \
+      cuda-toolkit-9-0 \
+      libcudnn7=7.0.5.15-1+cuda9.0 \
+      libcudnn7-dev=7.0.5.15-1+cuda9.0 \
+ && ls /usr/local/cuda-9.0/targets/x86_64-linux/lib/stubs/* | xargs -I{} ln -s {} /usr/lib/x86_64-linux-gnu/ \
+ && ln -s libcuda.so /usr/lib/x86_64-linux-gnu/libcuda.so.1 \
+ && ln -s libnvidia-ml.so /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
+ ## NVtop
+ $$ git clone https://github.com/Syllo/nvtop.git \
+ && mkdir -p nvtop/build && cd nvtop/build \
+ && cmake .. \
+ && make \
+ && make install \
+ && cd ../.. && rm -rf nvtop \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+ 
+
+ENV CUDA_HOME=/usr/local/cuda \
+  GUROBI_HOME="/opt/gurobi752/linux64" \
+  PATH=${CUDA_HOME}/bin:${GUROBI_HOME}/bin:${PATH} \
+  LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${CUDA_HOME}/extras/CUPTI/lib64:${GUROBI_HOME}/lib:${LD_LIBRARY_PATH} \
+  NVIDIA_VISIBLE_DEVICES=all \
+  NVIDIA_DRIVER_CAPABILITIES=compute,utility \
+  NVIDIA_REQUIRE_CUDA="cuda>=9.0"
 
 # Set up config files
 COPY config ./
@@ -54,7 +82,7 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f rserver.conf /etc/rstudio/rserver.conf \
   && echo "rsession-ld-library-path=$LD_LIBRARY_PATH" >> /etc/rstudio/rserver.conf \
   && mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
-  && echo 'Sys.setenv(GUROBI_HOME="{$GUROBI_HOME}", PATH="${PATH}", LD_LIBRARY_PATH="${LD_LIBRARY_PATH}", ))' >> /usr/lib/R/etc/Rprofile.site \
+  && echo 'Sys.setenv(CUDA_HOME="$CUDA_HOME", GUROBI_HOME="{$GUROBI_HOME}", PATH="${PATH}", LD_LIBRARY_PATH="${LD_LIBRARY_PATH}", ))' >> /usr/lib/R/etc/Rprofile.site \
   && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
   && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site \
   && mv -f bash_settings.sh /etc/bash.bashrc \
@@ -64,6 +92,14 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f gurobi.lic /opt/gurobi752/gurobi.lic \
   && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
   && echo 'set -g default-terminal "screen-256color"' >> /usr/share/byobu/profiles/tmux
+
+# Tensorflow, Keras, Xgboost for GPU
+RUN pip install h5py pyyaml requests Pillow scipy tensorflow-gpu keras \
+  && git clone --recursive https://github.com/dmlc/xgboost \
+  && mkdir -p xgboost/build && cd xgboost/build \
+  && cmake .. -DUSE_CUDA=ON -DR_LIB=ON \
+  && make install -j \
+  && cd ../.. && rm -rf xgboost
 
 ### R config and packages
 RUN . /etc/environment \

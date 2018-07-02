@@ -11,10 +11,12 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
  && echo "deb http://dev.monetdb.org/downloads/deb/ stretch monetdb" > /etc/apt/sources.list.d/monetdb.list \
  && echo "deb-src http://dev.monetdb.org/downloads/deb/ stretch monetdb" >> /etc/apt/sources.list.d/monetdb.list \
  && apt-get update \
+ ## Installs to help install
  && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
-     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv gnupg apt-transport-https ccache golang-1.8 ruby-full monetdb5-sql monetdb-client  \
+ && gnupg gnupg2 apt-transport-https dirmngr libclang-dev software-properties-common \
+ && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
+     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full monetdb5-sql monetdb-client  \
 ### R package dependencies
-     libclang-dev \
      libnlopt-dev \
      libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 
       grass grass-doc grass-dev \
@@ -28,6 +30,7 @@ RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/
       monetdb5-sql monetdb-client \
 ## Python stuff
  && pip install virtualenv --no-cache-dir \
+ && pip install h5py pyyaml requests Pillow scipy tensorflow keras \
 ### non-apt stuff (micro)
   && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \
 ### RStudio preview version 
@@ -65,7 +68,6 @@ RUN . /etc/environment \
   && Rscript -e "withr::with_envvar(c('CCACHE'=''), withr::with_makevars(c('CCACHE'=''), install.packages('rJava')))" \
   && install2.r -e -r $MRAN RcppArmadillo V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras caret brms rstanarm plotly rasterVis doParallel doMC here fields threejs matrixStats fasterize cowplot optimx bayesplot shinystan fst assertr jqr ape vegan officer ReporteRs rvg pkgdown RcppGSL RcppZiggurat prioritizr aws.s3 aws.signature knitcitations goodpractice xgboost \
   && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'  \
-  && Rscript -e "keras::install_keras()" \
 ## Cleanup
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages \
   && ccache -C

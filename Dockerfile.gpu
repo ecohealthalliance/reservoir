@@ -82,7 +82,7 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f rserver.conf /etc/rstudio/rserver.conf \
   && echo "rsession-ld-library-path=$LD_LIBRARY_PATH" | tee -a /etc/rstudio/rserver.conf \
   && mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
-  && echo 'Sys.setenv(CUDA_HOME="$CUDA_HOME"); Sys.setenv(GUROBI_HOME="{$GUROBI_HOME}"); Sys.setenv(PATH="${PATH}"); Sys.setenv(LD_LIBRARY_PATH="${LD_LIBRARY_PATH}")' | tee -a /usr/local/lib/R/etc/Rprofile.site \
+  && echo 'Sys.setenv(CUDA_HOME="$CUDA_HOME"); Sys.setenv(GUROBI_HOME="$GUROBI_HOME"); Sys.setenv(PATH="$PATH"); Sys.setenv(LD_LIBRARY_PATH="$LD_LIBRARY_PATH")' | tee -a /usr/local/lib/R/etc/Rprofile.site \
   && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
   && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site \
   && mv -f bash_settings.sh /etc/bash.bashrc \

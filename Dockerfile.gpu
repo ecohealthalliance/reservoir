@@ -57,7 +57,7 @@ RUN wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/r
  && ln -s libcuda.so /usr/lib/x86_64-linux-gnu/libcuda.so.1 \
  && ln -s libnvidia-ml.so /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
  ## NVtop
- $$ git clone https://github.com/Syllo/nvtop.git \
+ && git clone https://github.com/Syllo/nvtop.git \
  && mkdir -p nvtop/build && cd nvtop/build \
  && cmake .. \
  && make \

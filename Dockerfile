@@ -6,15 +6,14 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 ### Shiny
 #RUN export ADD=shiny && bash /etc/cont-init.d/add
 ADD latest-rstudio-preview.R /latest-rstudio-preview.R
-### Shell tools
-RUN  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_9.0/ /' > /etc/apt/sources.list.d/fish.list \
+## Installs to help install
+RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
+   gnupg gnupg2 apt-transport-https dirmngr libclang-dev software-properties-common \
+ &&  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_9.0/ /' > /etc/apt/sources.list.d/fish.list \
  && echo "deb http://dev.monetdb.org/downloads/deb/ stretch monetdb" > /etc/apt/sources.list.d/monetdb.list \
  && echo "deb-src http://dev.monetdb.org/downloads/deb/ stretch monetdb" >> /etc/apt/sources.list.d/monetdb.list \
- && apt-get update \
- ## Installs to help install
- && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
- && gnupg gnupg2 apt-transport-https dirmngr libclang-dev software-properties-common \
- && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
+### Shell tools
+ && apt-get update apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
      curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full monetdb5-sql monetdb-client  \
 ### R package dependencies
      libnlopt-dev \

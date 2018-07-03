@@ -3,6 +3,9 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 
 ## Install stuff
 ARG CFLAGS=-w
+ARG CXXFLAGS=-w
+ARG CMAKE_C_FLAGS=-w
+ARG CMAKE_CXX_FLAGS=-w
 ### Shiny
 #RUN export ADD=shiny && bash /etc/cont-init.d/add
 ADD latest-rstudio-preview.R /latest-rstudio-preview.R

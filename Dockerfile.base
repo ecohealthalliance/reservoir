@@ -27,8 +27,9 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
       python-pip \
       monetdb5-sql monetdb-client \
 ## Python stuff
+RUN pip install wheel setuptools --upgrade \
  && pip install virtualenv --no-cache-dir \
- && pip install wheel h5py pyyaml requests Pillow scipy tensorflow keras \
+ && pip install h5py pyyaml requests Pillow scipy tensorflow keras \
 ### non-apt stuff (micro)
   && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \
 ### RStudio preview version 

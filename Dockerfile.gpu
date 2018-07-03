@@ -93,7 +93,8 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && echo 'set -g default-terminal "screen-256color"' | tee -a /usr/share/byobu/profiles/tmux
 
 # Tensorflow, Keras, Xgboost for GPU
-RUN pip install wheel h5py pyyaml requests Pillow scipy tensorflow-gpu keras \
+RUN pip install wheel setuptools --upgrade \
+  && pip install h5py pyyaml requests Pillow scipy tensorflow-gpu keras \
   && git clone --recursive https://github.com/dmlc/xgboost \
   && mkdir -p xgboost/build && cd xgboost/build \
   && cmake .. -DUSE_CUDA=ON -DR_LIB=ON \

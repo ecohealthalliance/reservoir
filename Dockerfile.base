@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
       python-pip \
       monetdb5-sql monetdb-client \
 ## Python stuff
-RUN pip install wheel setuptools --upgrade \
+ && pip install wheel setuptools --upgrade \
  && pip install virtualenv --no-cache-dir \
  && pip install h5py pyyaml requests Pillow scipy tensorflow keras \
 ### non-apt stuff (micro)

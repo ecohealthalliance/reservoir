@@ -98,7 +98,7 @@ RUN pip install wheel setuptools --upgrade \
   && git clone --recursive https://github.com/dmlc/xgboost \
   && mkdir -p xgboost/build && cd xgboost/build \
   && cmake .. -DUSE_CUDA=ON -DR_LIB=ON \
-  && make install -j \
+  && make install -j1 \
   && cd ../.. && rm -rf xgboost
 
 ### R config and packages

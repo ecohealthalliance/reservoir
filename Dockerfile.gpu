@@ -112,7 +112,7 @@ RUN . /etc/environment \
   && ccache -C \
 ## Turn on install parallelism after setup
   && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site \
-  && echo "options(Ncpus=min(8, floor(parallel::detectCores()/2) + 1, na.rm = TRUE))" >> | tee -a /usr/local/lib/R/etc/Rprofile.site
+  && echo "options(Ncpus=min(8, floor(parallel::detectCores()/2) + 1, na.rm = TRUE))" | tee -a /usr/local/lib/R/etc/Rprofile.site
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so
 ## just create the run and finish scripts

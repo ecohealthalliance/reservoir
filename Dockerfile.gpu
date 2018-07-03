@@ -82,9 +82,8 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f rserver.conf /etc/rstudio/rserver.conf \
   && echo "rsession-ld-library-path=$LD_LIBRARY_PATH" | tee -a /etc/rstudio/rserver.conf \
   && mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
-  && echo "Sys.setenv(CUDA_HOME=\"$CUDA_HOME\"); Sys.setenv(GUROBI_HOME=\"$GUROBI_HOME\"); Sys.setenv(PATH=\"$PATH\"); Sys.setenv(LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH\")"" | tee -a /usr/local/lib/R/etc/Rprofile.site \
+  && echo "Sys.setenv(CUDA_HOME=\"$CUDA_HOME\"); Sys.setenv(GUROBI_HOME=\"$GUROBI_HOME\"); Sys.setenv(PATH=\"$PATH\"); Sys.setenv(LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH\")" | tee -a /usr/local/lib/R/etc/Rprofile.site \
   && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
-  && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site \
   && mv -f bash_settings.sh /etc/bash.bashrc \
   && mv -f userconf.sh /etc/cont-init.d/conf \
   && mv -f ccache.conf /etc/ccache.conf \
@@ -110,8 +109,10 @@ RUN . /etc/environment \
   && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'  \
 ## Cleanup
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages \
-  && ccache -C
-
+  && ccache -C \
+## Turn on install parallelism after setup
+  && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site \
+  && echo "options(Ncpus=min(8, floor(parallel::detectCores()/2) + 1, na.rm = TRUE))" >> | tee -a /usr/local/lib/R/etc/Rprofile.site
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so
 ## just create the run and finish scripts

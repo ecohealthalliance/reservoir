@@ -47,9 +47,9 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
   && R CMD javareconf 
 
 
-ENV GUROBI_HOME="/opt/gurobi752/linux64" \
-  PATH=${GUROBI_HOME}/bin:${PATH} \
-  LD_LIBRARY_PATH=${GUROBI_HOME}/lib:${LD_LIBRARY_PATH}
+ENV GUROBI_HOME=/opt/gurobi752/linux64"
+ENV PATH=$GUROBI_HOME/bin:$PATH \
+  LD_LIBRARY_PATH=$GUROBI_HOME/lib:$LD_LIBRARY_PATH
 
 # Set up config files
 COPY config ./

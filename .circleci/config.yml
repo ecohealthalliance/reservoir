@@ -1,20 +1,33 @@
 version: 2
 jobs:
- build:
+ base:
    machine: true
    steps:
      - checkout
      - run:
-           name: Build Container
+           name: Build Base Container
            command: |
             docker build -f Dockerfile.base -t ecohealthalliance/reservoir .
-            docker build -f Dockerfile.gpu -t ecohealthalliance/reservoir:gpu .
      - deploy:
            name: Push to Docker Hub
            command: |
               if [ "${CIRCLE_BRANCH}" == "master" ]; then
                 docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
                 docker push ecohealthalliance/reservoir
+              fi
+ gpu:
+   machine: true
+   steps:
+     - checkout
+     - run:
+           name: Build GPU Container
+           command: |
+            docker build -f Dockerfile.gpu -t ecohealthalliance/reservoir:gpu .
+     - deploy:
+           name: Push to Docker Hub
+           command: |
+              if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
                 docker push ecohealthalliance/reservoir:gpu
               fi
               
@@ -22,7 +35,8 @@ workflows:
    version: 2
    commit:
      jobs:
-       - build
+       - base
+       - gpu
    nightly:
      triggers:
        - schedule:
@@ -33,3 +47,4 @@ workflows:
                  - master
      jobs:
        - build
+       - gpu

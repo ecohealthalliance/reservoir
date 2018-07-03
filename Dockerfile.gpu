@@ -108,6 +108,7 @@ RUN installGithub.r s-u/unixtools \
   && mkdir -p xgboost/build && cd xgboost/build \
   && cmake .. -DUSE_CUDA=ON -DR_LIB=ON \
   && make install -j1 \
+  && Rscript -e "devtools::install('R-package')" \
   && cd ../.. && rm -rf xgboost \
 ## Cleanup
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages \

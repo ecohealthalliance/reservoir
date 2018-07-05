@@ -15,9 +15,10 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
  && echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
      tee /etc/apt/sources.list.d/azure-cli.list \
  && curl -L https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+ && add-apt-repository ppa:cpick/hub \
 ### Shell tools
  && apt-get update && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
-     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full monetdb5-sql monetdb-client azure-cli awscli \
+     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full monetdb5-sql monetdb-client azure-cli awscli hub \
 ### R package dependencies
      libnlopt-dev \
      libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 

@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
  && curl -L https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
 ### Shell tools
  && apt-get update && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
-     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full monetdb5-sql monetdb-client azure-cli \
+     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full monetdb5-sql monetdb-client azure-cli awscli \
 ### R package dependencies
      libnlopt-dev \
      libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 

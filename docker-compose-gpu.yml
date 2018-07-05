@@ -1,0 +1,44 @@
+
+version: '2'
+
+services:
+  caddy:
+    image: joshix/caddy
+    links:
+      - rstudio
+      - netdata
+    volumes:
+      - "./site2/:/var/www/html"
+      - "./.caddy/:/.caddy"
+    ports:
+      - "22051:22051"
+    restart: always
+    hostname: prospero-caddy
+    cpu_shares: 64
+
+  rstudio:
+    image: "ecohealthalliance/reservoir:gpu"
+    environment:
+      - USERS_DIRECTORY=/home/docker_accts
+    ports:
+      - "22022:22"
+      - "22088:8787"
+      - "60990-61000:60990-61000/udp"
+    volumes:
+      - "/home:/home"
+#      - "/home/shiny:/srv/shiny-server"
+    restart: always
+    hostname: prospero-reservoir
+    
+  netdata:
+    image: titpetric/netdata  
+    cap_add:
+      - SYS_PTRACE
+    volumes:
+      - "/proc:/host/proc:ro"
+      - "/sys:/host/sys:ro"
+      - "./netdata/netdata.conf:/etc/netdata/netdata.conf"
+      - "./netdata/health_alarm_notify.conf:/etc/netdata/health_alarm_notify.conf"
+    restart: always
+    hostname: prospero-status
+    cpu_shares: 64

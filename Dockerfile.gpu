@@ -7,15 +7,15 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 ADD latest-rstudio-preview.R /latest-rstudio-preview.R
 ## Installs to help install
 RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
-   gnupg gnupg2 apt-transport-https dirmngr libclang-dev software-properties-common \
+   curl gnupg gnupg2 apt-transport-https dirmngr libclang-dev software-properties-common \
  &&  echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/2/Debian_9.0/ /' > /etc/apt/sources.list.d/fish.list \
  && echo "deb http://dev.monetdb.org/downloads/deb/ stretch monetdb" > /etc/apt/sources.list.d/monetdb.list \
  && echo "deb-src http://dev.monetdb.org/downloads/deb/ stretch monetdb" >> /etc/apt/sources.list.d/monetdb.list \
- && wget -q --output-document=- https://www.monetdb.org/downloads/MonetDB-GPG-KEY | sudo apt-key add - \
+ && wget -q --output-document=- https://www.monetdb.org/downloads/MonetDB-GPG-KEY | apt-key add - \
  && AZ_REPO=$(lsb_release -cs) \
  && echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
-    sudo tee /etc/apt/sources.list.d/azure-cli.list \
- && curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add - \
+     tee /etc/apt/sources.list.d/azure-cli.list \
+ && curl -L https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
 ### Shell tools
  && apt-get update && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
      curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full monetdb5-sql monetdb-client azure-cli \

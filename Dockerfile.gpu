@@ -102,8 +102,8 @@ RUN pip install wheel setuptools --upgrade \
   
 
 ### R config and packages
-RUN echo "CFLAGS=-w"  | tee -a /usr/local/lib/R/etc/Makevars.site \
-  &&  echo "CXXFLAGS=-w"  | tee -a /usr/local/lib/R/etc/Makevars.site \
+RUN echo "CFLAGS=-w -j$(nproc)"  | tee -a /usr/local/lib/R/etc/Makevars.site \
+  &&  echo "CXXFLAGS=-w -j$(nproc)"  | tee -a /usr/local/lib/R/etc/Makevars.site \
   &&  installGithub.r s-u/unixtools \
   && installGithub.r s-u/unixtools eddelbuettel/littler \
   && ln -f -s /usr/local/lib/R/site-library/littler/examples/install2.r /usr/local/bin/install2.r \

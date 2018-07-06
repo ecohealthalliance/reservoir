@@ -104,7 +104,8 @@ RUN pip install wheel setuptools scipy --upgrade \
 ### R config and packages
 RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
   &&  echo "CXXFLAGS=-w"  >> /usr/local/lib/R/etc/Makevars.site \
-  && MAKE_OLD=$MAKE && MAKE="make -j$(nproc)" \
+  &&  echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
+  && MAKEFLAGS=-j$(nproc)" \
 #  && echo "options(Ncpus=min(8, floor(parallel::detectCores()/2) + 1, na.rm = TRUE))" | tee -a /usr/local/lib/R/etc/Rprofile.site \
   && installGithub.r s-u/unixtools eddelbuettel/littler \
   && ln -f -s /usr/local/lib/R/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
@@ -122,7 +123,7 @@ RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
 ## Cleanup
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages \
   && ccache -C \
-  && MAKE=$MAKE_OLD && unset MAKE_OLD \
+  && unset MAKEFLAGS \
 ## Turn on install parallelism after setup
   && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site 
 

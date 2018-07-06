@@ -29,9 +29,9 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
       python-pip \
       monetdb5-sql monetdb-client \
 ## Python stuff
- && pip install wheel setuptools --upgrade \
+ && pip install wheel setuptools scipy --upgrade \
  && pip install virtualenv --no-cache-dir \
- && pip install h5py pyyaml requests Pillow scipy tensorflow keras \
+ && pip install h5py pyyaml requests Pillow tensorflow keras \
 ### non-apt stuff (micro)
   && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \
 ### RStudio preview version 
@@ -75,7 +75,7 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
 RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
   &&  echo "CXXFLAGS=-w"  >> /usr/local/lib/R/etc/Makevars.site \
   && MAKE_OLD=$MAKE && MAKE="make -j$(nproc)" \
-  && echo "options(Ncpus=min(8, floor(parallel::detectCores()/2) + 1, na.rm = TRUE))" | tee -a /usr/local/lib/R/etc/Rprofile.site \
+#  && echo "options(Ncpus=min(8, floor(parallel::detectCores()/2) + 1, na.rm = TRUE))" | tee -a /usr/local/lib/R/etc/Rprofile.site \
   && installGithub.r s-u/unixtools eddelbuettel/littler \
   && ln -f -s /usr/local/lib/R/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
   && install2.r --error --skipinstalled \

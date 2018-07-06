@@ -105,7 +105,7 @@ RUN pip install wheel setuptools scipy --upgrade \
 RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
   &&  echo "CXXFLAGS=-w"  >> /usr/local/lib/R/etc/Makevars.site \
   &&  echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
-  && MAKEFLAGS=-j$(nproc)" \
+  && MAKEFLAGS=-j$(nproc) \
 #  && echo "options(Ncpus=min(8, floor(parallel::detectCores()/2) + 1, na.rm = TRUE))" | tee -a /usr/local/lib/R/etc/Rprofile.site \
   && installGithub.r s-u/unixtools eddelbuettel/littler \
   && ln -f -s /usr/local/lib/R/site-library/littler/examples/install2.r /usr/local/bin/install2.r \

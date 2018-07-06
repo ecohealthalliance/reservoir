@@ -72,8 +72,8 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && echo 'set -g default-terminal "screen-256color"' | tee -a /usr/share/byobu/profiles/tmux
 
 ### R config and packages
-RUN echo "CFLAGS=-w"  >> /usr/local/lib/R/etc/Makevars.site \
-  &&  echo "CXXFLAGS=-w"  >> /usr/local/lib/R/etc/Makevars.site \
+RUN echo "CFLAGS=-w -j$(nproc)" | tee -a /usr/local/lib/R/etc/Makevars.site \
+  &&  echo "CXXFLAGS=-w -j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
   && installGithub.r s-u/unixtools eddelbuettel/littler \
   && ln -f -s /usr/local/lib/R/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
   && install2.r --error --skipinstalled \

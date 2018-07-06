@@ -114,7 +114,7 @@ RUN echo "CFLAGS=-w"  >> /usr/local/lib/R/etc/Makevars.site \
   && git clone --recursive https://github.com/dmlc/xgboost \
   && mkdir -p xgboost/build && cd xgboost/build \
   && cmake .. -DUSE_CUDA=ON -DR_LIB=ON \
-  && make install \
+  && make install -j$(nproc) \
   && unset R_LIBS_USER \
   && cd ../.. && rm -rf xgboost \
 ## Cleanup

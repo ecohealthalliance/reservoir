@@ -102,7 +102,9 @@ RUN pip install wheel setuptools --upgrade \
   
 
 ### R config and packages
-RUN installGithub.r s-u/unixtools \
+RUN echo "CFLAGS=-w"  >> /usr/local/lib/R/etc/Makevars.site \
+  &&  echo "CXXFLAGS=-w"  >> /usr/local/lib/R/etc/Makevars.site \
+  &&  installGithub.r s-u/unixtools \
   && Rscript -e "withr::with_envvar(c('CCACHE'=''), withr::with_makevars(c('CCACHE'=''), install.packages('rJava')))" \
   && install2.r --error --deps TRUE \
     RcppArmadillo V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony lme4 MonetDBLite rstan keras caret brms rstanarm plotly rasterVis doParallel doMC here fields threejs matrixStats fasterize cowplot optimx bayesplot shinystan fst assertr jqr ape vegan officer ReporteRs rvg pkgdown RcppGSL RcppZiggurat prioritizr aws.s3 aws.signature knitcitations goodpractice \

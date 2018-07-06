@@ -75,6 +75,7 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
 RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
   &&  echo "CXXFLAGS=-w"  >> /usr/local/lib/R/etc/Makevars.site \
   && MAKE_OLD=$MAKE && MAKE="make -j$(nproc)" \
+  && echo "options(Ncpus=min(8, floor(parallel::detectCores()/2) + 1, na.rm = TRUE))" | tee -a /usr/local/lib/R/etc/Rprofile.site \
   && installGithub.r s-u/unixtools eddelbuettel/littler \
   && ln -f -s /usr/local/lib/R/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
   && install2.r --error --skipinstalled \
@@ -87,8 +88,7 @@ RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
   && ccache -C \
   && MAKE=$MAKE_OLD && unset MAKE_OLD \
 ## Turn on install parallelism after setup
-  && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site \
-  && echo "options(Ncpus=min(8, floor(parallel::detectCores()/2) + 1, na.rm = TRUE))" | tee -a /usr/local/lib/R/etc/Rprofile.site
+  && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site 
 
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so

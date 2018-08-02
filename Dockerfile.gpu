@@ -98,7 +98,7 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
 
 # Tensorflow, Keras, Xgboost for GPU
 RUN pip install wheel setuptools scipy --upgrade \
-  && pip install h5py pyyaml requests Pillow tensorflow-gpu keras
+  && pip install h5py pyyaml requests Pillow tensorflow-gpu keras dvc
   
 
 ### R config and packages

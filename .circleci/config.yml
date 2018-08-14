@@ -37,14 +37,3 @@ workflows:
      jobs:
        - base
        - gpu
-   nightly:
-     triggers:
-       - schedule:
-           cron: "0 0 * * *"
-           filters:
-             branches:
-               only:
-                 - master
-     jobs:
-       - base
-       - gpu

@@ -29,6 +29,7 @@ services:
 #      - "/home/shiny:/srv/shiny-server"
     restart: always
     hostname: prospero-reservoir
+    runtime: nvidia
     
   netdata:
     image: titpetric/netdata  

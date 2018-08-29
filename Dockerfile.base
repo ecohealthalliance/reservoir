@@ -27,6 +27,7 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
       libopenmpi-dev \
       libgoogle-perftools-dev libprotoc-dev libprotobuf-dev protobuf-compiler golang-go graphviz \
       python-pip \
+      jags \
       monetdb5-sql monetdb-client \
 ## Python stuff
  && pip install wheel setuptools scipy --upgrade \
@@ -80,9 +81,9 @@ RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
   && installGithub.r s-u/unixtools eddelbuettel/littler \
   && ln -f -s /usr/local/lib/R/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
   && install2.r --error --skipinstalled \
-        rJava RcppArmadillo V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony  lme4 MonetDBLite rstan keras \
+        rJava RcppArmadillo V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony  lme4 MonetDBLite runjags rstan keras \
     # robustbase ddalpha caret \
-    brms rstanarm plotly rasterVis doParallel doMC here fields threejs matrixStats fasterize cowplot optimx bayesplot shinystan fst assertr jqr ape vegan officer ReporteRs rvg pkgdown RcppGSL RcppZiggurat prioritizr aws.s3 aws.signature knitcitations goodpractice xgboost \
+    brms rstanarm plotly rasterVis doParallel doMC here fields threejs matrixStats fasterize cowplot optimx bayesplot shinystan fst assertr jqr ape vegan officer rvg pkgdown RcppGSL RcppZiggurat prioritizr aws.s3 aws.signature knitcitations goodpractice xgboost \
   && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'  \
 ## Cleanup
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages \

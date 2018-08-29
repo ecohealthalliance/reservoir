@@ -20,6 +20,7 @@ services:
     image: "ecohealthalliance/reservoir:latest"
     environment:
       - USERS_DIRECTORY=/home/docker_accts
+      - PASSWORD=eh@rstudi0
     ports:
       - "22022:22"
       - "22088:8787"

@@ -32,6 +32,9 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
       cmake libncurses5-dev \
 ### non-apt stuff (micro)
   && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin \
+  && wget https://github.com/sharkdp/bat/releases/download/v0.6.0/bat-musl_0.6.0_amd64.deb && dpkg -i bat-musl_0.6.0_amd64.deb && rm  bat-musl_0.6.0_amd64.deb \
+  && wget https://github.com/sharkdp/fd/releases/download/v7.1.0/fd-musl_7.1.0_amd64.deb && dpkg -i fd-musl_7.1.0_amd64.deb && rm fd-musl_7.1.0_amd64.deb \
+  && wget https://github.com/BurntSushi/ripgrep/releases/download/0.9.0/ripgrep_0.9.0_amd64.deb && dpkg -i ripgrep_0.9.0_amd64.deb && rm ripgrep_0.9.0_amd64.deb \
 ### RStudio preview version 
   && Rscript latest-rstudio-preview.R \
   && dpkg -i rstudio-server-preview-stretch-amd64.deb \

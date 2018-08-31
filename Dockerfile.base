@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
  && curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add - \
 ### Shell tools
  && apt-get update && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
-     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full monetdb5-sql monetdb-client azure-cli awscli \
+     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full monetdb5-sql monetdb-client azure-cli awscli ripgrep \
 ### R package dependencies
      libnlopt-dev \
      libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 
@@ -29,6 +29,9 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
       python-pip \
       jags \
       monetdb5-sql monetdb-client \
+ && wget https://github.com/sharkdp/bat/releases/download/v0.6.0/bat-musl_0.6.0_amd64.deb && dpkg -i bat-musl_0.6.0_amd64.deb && rm  bat-musl_0.6.0_amd64.deb \
+ && wget https://github.com/sharkdp/fd/releases/download/v7.1.0/fd-musl_7.1.0_amd64.deb && dpkg -i fd-musl_7.1.0_amd64.deb && rm fd-musl_7.1.0_amd64.deb \
+ && wget https://github.com/BurntSushi/ripgrep/releases/download/0.9.0/ripgrep_0.9.0_amd64.deb && dpkg -i ripgrep_0.9.0_amd64.deb && rm ripgrep_0.9.0_amd64.deb \
 ## Python stuff
  && pip install wheel setuptools scipy --upgrade \
  && pip install virtualenv --no-cache-dir \

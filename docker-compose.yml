@@ -2,44 +2,83 @@
 version: '2'
 
 services:
-  caddy:
-    image: joshix/caddy
-    links:
-      - rstudio
-      - netdata
-    volumes:
-      - "./site/:/var/www/html"
-      - "./.caddy/:/.caddy"
-    ports:
-      - "22051:22051"
-    restart: always
-    hostname: aegypti-caddy
-    cpu_shares: 64
+#  caddy:
+#    image: joshix/caddy
+#    links:
+#      - rstudio
+#      - netdata
+#    volumes:
+#      - "./site/:/var/www/html"
+#      - "./.caddy/:/.caddy"
+#    ports:
+#      - "22051:22051"
+#    restart: always
+#    hostname: aegypti-caddy
+#    cpu_shares: 64
 
   rstudio:
-    image: "ecohealthalliance/reservoir:latest"
+    image: "testr"
     environment:
       - USERS_DIRECTORY=/home/docker_accts
       - PASSWORD=eh@rstudi0
+      - DOCKER_HOST=tcp://docker-socket-proxy:2375
     ports:
       - "22022:22"
       - "22088:8787"
       - "60990-61000:60990-61000/udp"
     volumes:
       - "/home:/home"
-#      - "/home/shiny:/srv/shiny-server"
+      - "/var/run/docker.sock:/var/run/docker.sock"
     restart: always
     hostname: aegypti-reservoir
+    networks:
+     - eha-servers
+
     
-  netdata:
-    image: titpetric/netdata  
-    cap_add:
-      - SYS_PTRACE
-    volumes:
-      - "/proc:/host/proc:ro"
-      - "/sys:/host/sys:ro"
-      - "./netdata/netdata.conf:/etc/netdata/netdata.conf"
-      - "./netdata/health_alarm_notify.conf:/etc/netdata/health_alarm_notify.conf"
+  dockerproxy: 
+    image: tecnativa/docker-socket-proxy
+    privileged: true
+    ports:
+     - "2375:2375"
+    volumes: 
+     - "/var/run/docker.sock:/var/run/docker.sock"
     restart: always
-    hostname: aegypti-status
-    cpu_shares: 64
+    environment:
+     - EVENTS=1
+     - PING=1
+     - VERSION=1
+     - BUILD=1
+     - COMMIT=1
+     - CONTAINERS=1
+     - EXEC=1
+     - IMAGES=1
+     - INFO=1
+     - NETWORKS=1
+     - NODES=1
+     - PLUGINS=1
+     - SERVICES=1
+     - SWARM=1
+     - SYSTEM=1
+     - TASKS=1
+     - VOLUMES=1
+     - AUTH=1
+     - SECRETS=1
+     - POST=1
+    networks:
+     - eha-servers
+
+networks:
+  eha-servers:
+
+#  netdata:
+#    image: titpetric/netdata  
+#    cap_add:
+#      - SYS_PTRACE
+#    volumes:
+#      - "/proc:/host/proc:ro"
+#      - "/sys:/host/sys:ro"
+#      - "./netdata/netdata.conf:/etc/netdata/netdata.conf"
+#      - "./netdata/health_alarm_notify.conf:/etc/netdata/health_alarm_notify.conf"
+#    restart: always
+#    hostname: aegypti-status
+#    cpu_shares: 64

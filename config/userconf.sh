@@ -18,7 +18,7 @@ if [ -d "$USERS_DIRECTORY" ]; then
   echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
   groupadd ssh-users
   groupadd nfs-users
-  cut -d: -f1 $USERS_DIRECTORY/passwd-add | xargs -I {} usermod -a -G ssh-users,nfs-users {}
+  cut -d: -f1 $USERS_DIRECTORY/passwd-add | xargs -I {} usermod -a -G ssh-users,nfs-users,docker {}
   cut -d: -f1 $USERS_DIRECTORY/passwd-add | xargs -I {} chown -R {} /home/{}
   userdel rstudio
 fi
@@ -47,7 +47,7 @@ if [ "$USERID" -ne 1000 ]
     useradd -m $USER -u $USERID
     mkdir /home/$USER
     chown -R $USER /home/$USER
-    usermod -a -G staff $USER
+    usermod -a -G staff,docker $USER
 elif [ "$USER" != "rstudio" ]
   then
     ## cannot move home folder when it's a shared volume, have to copy and change permissions instead
@@ -55,7 +55,7 @@ elif [ "$USER" != "rstudio" ]
     ## RENAME the user
     usermod -l $USER -d /home/$USER rstudio
     groupmod -n $USER rstudio
-    usermod -a -G staff $USER
+    usermod -a -G staff,docker $USER
     chown -R $USER:$USER /home/$USER
     echo "USER is now $USER"
 fi

@@ -55,7 +55,9 @@ elif [ "$USER" != "rstudio" ]
     ## RENAME the user
     usermod -l $USER -d /home/$USER rstudio
     groupmod -n $USER rstudio
-    usermod -a -G staff,docker $USER
+    groupadd ssh-users
+    groupadd nfs-users
+    usermod -a -G staff,docker,ssh-users,nfs-users $USER
     chown -R $USER:$USER /home/$USER
     echo "USER is now $USER"
 fi

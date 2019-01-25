@@ -53,14 +53,14 @@ workflows:
              branches:
                only:
                  - master
-  weekly:
-    triggers:
-      - schedule:
-          cron: "0 10 * * 0"
-          filters:
-            branches:
-              only:
-                - master
+   weekly:
+     triggers:
+       - schedule:
+           cron: "0 10 * * 0"
+           filters:
+             branches:
+               only:
+                 - master
      jobs:
        - base-build
        - gpu-build

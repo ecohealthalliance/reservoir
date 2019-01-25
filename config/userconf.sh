@@ -37,7 +37,7 @@ if [ "$USERID" -lt 1000 ]
     fi
 fi
 
-if [! -d "$USERS_DIRECTORY" ]; then
+if [ ! -d "$USERS_DIRECTORY" ]; then
 if [ "$USERID" -ne 1000 ]
 ## Configure user with a different USERID if requested.
   then

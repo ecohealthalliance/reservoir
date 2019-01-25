@@ -14,10 +14,8 @@ jobs:
      - deploy:
            name: Push to Docker Hub
            command: |
-              if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
-                docker push ecohealthalliance/reservoir
-              fi
+              docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
+              docker push ecohealthalliance/reservoir
  gpu-build:
    machine: true
    steps:
@@ -32,10 +30,8 @@ jobs:
      - deploy:
            name: Push to Docker Hub
            command: |
-              if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
-                docker push ecohealthalliance/reservoir:gpu
-              fi
+              docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
+              docker push ecohealthalliance/reservoir:gpu
 
 workflows:
    version: 2
@@ -57,3 +53,20 @@ workflows:
              branches:
                only:
                  - master
+  weekly:
+    triggers:
+      - schedule:
+          cron: "0 10 * * 0"
+          filters:
+            branches:
+              only:
+                - master
+     jobs:
+       - base-build
+       - gpu-build
+       - base-deploy:
+           requires:
+             - base-build
+       - gpu-deploy:
+           requires:
+             - gpu-build

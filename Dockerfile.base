@@ -78,7 +78,7 @@ RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
 #  && echo "options(Ncpus=min(8, floor(parallel::detectCores()/2) + 1, na.rm = TRUE))" | tee -a /usr/local/lib/R/etc/Rprofile.site \
   && installGithub.r s-u/unixtools \
   && install2.r --error --skipinstalled \
-        rJava RcppArmadillo V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony  lme4 MonetDBLite rjags runjags rstan keras \
+        RcppArmadillo V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony  lme4 MonetDBLite rjags runjags rstan keras \
     # robustbase ddalpha caret \
     brms rstanarm plotly rasterVis doParallel doMC here fields threejs matrixStats fasterize cowplot optimx bayesplot shinystan fst assertr jqr ape vegan officer rvg pkgdown RcppGSL RcppZiggurat prioritizr aws.s3 aws.signature knitcitations goodpractice xgboost \
   && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'  \

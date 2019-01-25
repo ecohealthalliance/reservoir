@@ -47,7 +47,9 @@ if [ "$USERID" -ne 1000 ]
     useradd -m $USER -u $USERID
     mkdir /home/$USER
     chown -R $USER /home/$USER
-    usermod -a -G staff,docker $USER
+    groupadd ssh-users
+    groupadd nfs-users
+    usermod -a -G staff,docker,ssh-users,nfs-users $USER
 elif [ "$USER" != "rstudio" ]
   then
     ## cannot move home folder when it's a shared volume, have to copy and change permissions instead

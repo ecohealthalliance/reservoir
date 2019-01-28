@@ -47,8 +47,16 @@ workflows:
    version: 2
    commit:
      jobs:
-       - base-build
-       - gpu-build
+       - base-build:
+           filters:
+             branches:
+               ignore:
+                 - master       
+       - gpu-build:
+           filters:
+             branches:
+               ignore:
+                 - master
        - base-build-and-deploy:
            filters:
              branches:

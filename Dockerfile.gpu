@@ -141,8 +141,9 @@ RUN mkdir -p /var/run/sshd \
 
 # Limit mosh ports
 RUN mv /usr/bin/mosh-server /usr/bin/mosh-server-orig \
-  && echo "#!/bin/bash\nmosh-server-orig -p 60990:61000" >> /usr/bin/mosh-server
-  && chmod +x /usr/bin-mosh-server
+  && echo '#!/bin/bash' >> /usr/bin/mosh-server \
+  && echo 'mosh-server-orig -p 60990:61000' >> /usr/bin/mosh-server \
+  && chmod +x /usr/bin/mosh-server
 
 ## Add and run config files
 

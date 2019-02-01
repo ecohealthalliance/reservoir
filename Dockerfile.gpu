@@ -11,9 +11,9 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
  && AZ_REPO=$(lsb_release -cs) \
  && echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
      tee /etc/apt/sources.list.d/azure-cli.list \
- && curl -L https://packages.microsoft.com/keys/microsoft.asc | apt-key add - 
- 
- 
+ && curl -L https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+
+
 ## Get docker itself
 RUN curl -sSL https://get.docker.com/ | sh \
 ### Shell tools
@@ -21,7 +21,7 @@ RUN curl -sSL https://get.docker.com/ | sh \
      curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full azure-cli awscli \
 ### R package dependencies
      libnlopt-dev \
-     libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 
+     libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \
       grass grass-doc grass-dev \
       python-setuptools python-dev build-essential git-core \
       libtesseract-dev libleptonica-dev tesseract-ocr-eng libpoppler-cpp-dev \
@@ -31,12 +31,12 @@ RUN curl -sSL https://get.docker.com/ | sh \
       jags \
       cmake libncurses5-dev \
 ### non-apt stuff (micro)
-  && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin 
-  
-### RStudio preview version 
+  && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin
+
+### RStudio preview version
 RUN Rscript latest-rstudio-preview.R \
   && dpkg -i rstudio-server-preview-stretch-amd64.deb \
-  && rm rstudio-server-preview-stretch-amd64.deb latest-rstudio-preview.R 
+  && rm rstudio-server-preview-stretch-amd64.deb latest-rstudio-preview.R
 
 ### Gurobi
 RUN wget -q http://packages.gurobi.com/7.5/gurobi7.5.2_linux64.tar.gz \
@@ -45,7 +45,7 @@ RUN wget -q http://packages.gurobi.com/7.5/gurobi7.5.2_linux64.tar.gz \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \
   && . /etc/environment \
-  && R CMD javareconf 
+  && R CMD javareconf
 
 #CUDA/GPU Stuff
 RUN wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub \
@@ -71,7 +71,7 @@ RUN wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/r
  && cd ../.. && rm -rf nvtop \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
- 
+
 
 ENV CUDA_HOME=/usr/local/cuda \
   GUROBI_HOME=/opt/gurobi752/linux64
@@ -101,7 +101,7 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
 # Tensorflow, Keras, Xgboost for GPU
 RUN pip install wheel setuptools scipy --upgrade \
   && pip install h5py pyyaml requests Pillow tensorflow-gpu keras dvc
-  
+
 
 ### R config and packages
 RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
@@ -126,7 +126,7 @@ RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
   && ccache -C \
   && unset MAKEFLAGS \
 ## Turn on install parallelism after setup
-  && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site 
+  && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so
 ## just create the run and finish scripts
@@ -134,10 +134,15 @@ RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
 RUN mkdir -p /var/run/sshd \
   && mkdir -p /etc/services.d/sshd \
   && echo '#!/bin/bash \nexec /usr/sbin/sshd -D' > /etc/services.d/sshd/run \
-  && echo '#!/bin/bash \n service ssh stop' > /etc/services.d/sshd/finish \ 
+  && echo '#!/bin/bash \n service ssh stop' > /etc/services.d/sshd/finish \
   && sed -i 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config \
   && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config \
   && echo "AllowGroups ssh-users" >> /etc/ssh/sshd_config
+
+# Limit mosh ports
+RUN mv /usr/bin/mosh-server /usr/bin/mosh-server-orig \
+  && echo "#!/bin/bash\nmosh-server-orig -p 60990:61000" >> /usr/bin/mosh-server
+  && chmod +x /usr/bin-mosh-server
 
 ## Add and run config files
 

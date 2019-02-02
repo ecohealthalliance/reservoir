@@ -1,10 +1,22 @@
 FROM rocker/geospatial:latest
 MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 
+## Setup SSH. s6 supervisor already installed for RStudio, so
+## just create the run and finish scripts
+
+RUN mkdir -p /var/run/sshd \
+  && mkdir -p /etc/services.d/sshd \
+  && echo '#!/bin/bash \nexec /usr/sbin/sshd -D' > /etc/services.d/sshd/run \
+  && echo '#!/bin/bash \n service ssh stop' > /etc/services.d/sshd/finish \ 
+  && sed -i 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config \
+  && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config \
+  && echo "AllowGroups ssh-users" >> /etc/ssh/sshd_config
+
 ## Install stuff
 ### Shiny
 #RUN export ADD=shiny && bash /etc/cont-init.d/add
 ADD latest-rstudio-preview.R /latest-rstudio-preview.R
+
 ## Installs to help install
 RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
    curl gnupg gnupg2 apt-transport-https dirmngr libclang-dev software-properties-common \
@@ -18,7 +30,7 @@ RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --n
 RUN curl -sSL https://get.docker.com/ | sh \
 ### Shell tools
  && apt-get update && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
-     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full azure-cli awscli \
+     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full azure-cli awscli docker \
 ### R package dependencies
      libnlopt-dev \
      libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 
@@ -40,9 +52,10 @@ RUN Rscript latest-rstudio-preview.R \
   && rm rstudio-server-preview-stretch-amd64.deb latest-rstudio-preview.R 
 
 ### Gurobi
-RUN wget -q http://packages.gurobi.com/7.5/gurobi7.5.2_linux64.tar.gz \
-  && tar xfz gurobi7.5.2_linux64.tar.gz -C /opt \
-  && rm gurobi7.5.2_linux64.tar.gz \
+RUN wget -q http://packages.gurobi.com/8.1/gurobi8.1.0_linux64.tar.gz \
+  && tar xfz gurobi8.1.0_linux64.tar.gz -C /opt \
+  && mv /opt/gurobi810 /opt/gurobi \
+  && rm gurobi8.1.0_linux64.tar.gz \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/ \
   && . /etc/environment \
@@ -75,7 +88,7 @@ RUN wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/r
  
 
 ENV CUDA_HOME=/usr/local/cuda \
-  GUROBI_HOME=/opt/gurobi752/linux64
+  GUROBI_HOME=/opt/gurobi/linux64
 ENV PATH=$CUDA_HOME/bin:$GUROBI_HOME/bin:$PATH \
   LD_LIBRARY_PATH=$CUDA_HOME/lib64:$CUDA_HOME/extras/CUPTI/lib64:${GUROBI_HOME}/lib:$LD_LIBRARY_PATH \
   NVIDIA_VISIBLE_DEVICES=all \
@@ -95,7 +108,6 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f userconf.sh /etc/cont-init.d/conf \
   && mv -f ccache.conf /etc/ccache.conf \
   && mv -f byobu_status /usr/share/byobu/status/status \
-  && mv -f gurobi.lic /opt/gurobi752/gurobi.lic \
   && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
   && echo 'set -g default-terminal "screen-256color"' | tee -a /usr/share/byobu/profiles/tmux
 
@@ -115,7 +127,7 @@ RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
     rJava RcppArmadillo V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony  lme4 MonetDBLite rjags runjags rstan keras \
     # robustbase ddalpha caret \
     brms rstanarm plotly rasterVis doParallel doMC here fields threejs matrixStats fasterize cowplot optimx bayesplot shinystan fst assertr jqr ape vegan officer rvg pkgdown RcppGSL RcppZiggurat prioritizr aws.s3 aws.signature knitcitations goodpractice \
-  && Rscript -e 'install.packages("/opt/gurobi752/linux64/R/gurobi_7.5-2_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'  \
+  && Rscript -e 'install.packages("/opt/gurobi/linux64/R/gurobi_8.1-0_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'  \
   && git clone --recursive https://github.com/dmlc/xgboost \
   && mkdir -p xgboost/build && cd xgboost/build \
   && cmake .. -DUSE_CUDA=ON -DR_LIB=ON \
@@ -128,17 +140,6 @@ RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
   && unset MAKEFLAGS \
 ## Turn on install parallelism after setup
   && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site 
-
-## Setup SSH. s6 supervisor already installed for RStudio, so
-## just create the run and finish scripts
-
-RUN mkdir -p /var/run/sshd \
-  && mkdir -p /etc/services.d/sshd \
-  && echo '#!/bin/bash \nexec /usr/sbin/sshd -D' > /etc/services.d/sshd/run \
-  && echo '#!/bin/bash \n service ssh stop' > /etc/services.d/sshd/finish \ 
-  && sed -i 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config \
-  && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config \
-  && echo "AllowGroups ssh-users" >> /etc/ssh/sshd_config
 
 ## Add and run config files
 

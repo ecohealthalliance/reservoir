@@ -1,83 +1,39 @@
-FROM rocker/geospatial:latest
+FROM ecohealthalliance/reservoir:server
 MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 
-## Setup SSH. s6 supervisor already installed for RStudio, so
-## just create the run and finish scripts
+## CUDA Version
+ENV CUDA_MAJOR_VERSION=9.2
+ENV CUDA_MAJOR_VERSION_HYP=9.2
+ENV CUDA_MINOR_VERSION=9.2.148-1
+ENV NVIDIA_REQUIRE_CUDA="cuda>=9.2"
 
-RUN mkdir -p /var/run/sshd \
-  && mkdir -p /etc/services.d/sshd \
-  && echo '#!/bin/bash \nexec /usr/sbin/sshd -D' > /etc/services.d/sshd/run \
-  && echo '#!/bin/bash \n service ssh stop' > /etc/services.d/sshd/finish \ 
-  && sed -i 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config \
-  && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config \
-  && echo "AllowGroups ssh-users" >> /etc/ssh/sshd_config
-
-## Install stuff
-### Shiny
-#RUN export ADD=shiny && bash /etc/cont-init.d/add
-ADD latest-rstudio-preview.R /latest-rstudio-preview.R
-
-## Installs to help install
-RUN apt-get update && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
-   curl gnupg gnupg2 apt-transport-https dirmngr libclang-dev software-properties-common \
- && AZ_REPO=$(lsb_release -cs) \
- && echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
-     tee /etc/apt/sources.list.d/azure-cli.list \
- && curl -L https://packages.microsoft.com/keys/microsoft.asc | apt-key add - 
- 
- 
-## Get docker itself
-RUN curl -sSL https://get.docker.com/ | sh \
-### Shell tools
- && apt-get update && apt-get install -y --force-yes --allow-unauthenticated --no-install-recommends --no-upgrade \
-     curl man ncdu tmux byobu htop zsh fish silversearcher-ag lsb-release mosh pv ccache golang-1.8 ruby-full azure-cli awscli docker \
-### R package dependencies
-     libnlopt-dev \
-     libglpk-dev coinor-symphony coinor-symphony coinor-libsymphony-dev coinor-libcgl-dev \ 
-      grass grass-doc grass-dev \
-      python-setuptools python-dev build-essential git-core \
-      libtesseract-dev libleptonica-dev tesseract-ocr-eng libpoppler-cpp-dev \
-      libopenmpi-dev \
-      libgoogle-perftools-dev libprotoc-dev libprotobuf-dev protobuf-compiler golang-go graphviz \
-      python-virtualenv python-pip \
-      jags \
-      cmake libncurses5-dev \
-      libsodium-dev \
-### non-apt stuff (micro)
-  && curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin 
-  
-### RStudio preview version 
-RUN Rscript latest-rstudio-preview.R \
-  && dpkg -i rstudio-server-preview-stretch-amd64.deb \
-  && rm rstudio-server-preview-stretch-amd64.deb latest-rstudio-preview.R 
-
-### Gurobi
-RUN wget -q http://packages.gurobi.com/8.1/gurobi8.1.0_linux64.tar.gz \
-  && tar xfz gurobi8.1.0_linux64.tar.gz -C /opt \
-  && mv /opt/gurobi810 /opt/gurobi \
-  && rm gurobi8.1.0_linux64.tar.gz \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/ \
-  && . /etc/environment \
-  && R CMD javareconf 
-
-#CUDA/GPU Stuff
+## CUDA Install
 RUN wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub \
- && echo "47217c49dcb9e47a8728b354450f694c9898cd4a126173044a69b1e9ac0fba96  /root/manual/7fa2af80.pub" | sha256sum -c --strict - \
- && apt-key add /root/manual/7fa2af80.pub \
- && wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.0.176-1_amd64.deb \
- && dpkg -i /root/manual/cuda-repo-ubuntu1604_9.0.176-1_amd64.deb \
- && echo 'deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /' > /etc/apt/sources.list.d/nvidia-ml.list \
- && rm -rf /root/manual \
- && apt-get update  && apt-get install --no-install-recommends -y \
-      cuda-toolkit-9-0 \
-      libcudnn7=7.0.5.15-1+cuda9.0 \
-      libcudnn7-dev=7.0.5.15-1+cuda9.0 \
- && ls /usr/local/cuda-9.0/targets/x86_64-linux/lib/stubs/* | xargs -I{} ln -s {} /usr/lib/x86_64-linux-gnu/ \
- && ln -s libcuda.so /usr/lib/x86_64-linux-gnu/libcuda.so.1 \
- && ln -s libnvidia-ml.so /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1 \
- ## NVtop
- && git clone https://github.com/Syllo/nvtop.git \
+&& echo "47217c49dcb9e47a8728b354450f694c9898cd4a126173044a69b1e9ac0fba96  /root/manual/7fa2af80.pub" | sha256sum -c --strict - \
+&& apt-key add /root/manual/7fa2af80.pub \
+&& wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_${CUDA_MINOR_VERSION}_amd64.deb \
+&& dpkg -i /root/manual/cuda-repo-ubuntu1604_${CUDA_MINOR_VERSION}_amd64.deb \
+&& echo 'deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /' > /etc/apt/sources.list.d/nvidia-ml.list \
+&& rm -rf /root/manual \
+&& apt-get update  && apt-get install --no-install-recommends -y \
+cuda-toolkit-${CUDA_MAJOR_VERSION_HYP} \
+libcudnn7 \
+libcudnn7-dev \
+&& ls /usr/local/cuda-${CUDA_MAJOR_VERSION}/targets/x86_64-linux/lib/stubs/* | xargs -I{} ln -s {} /usr/lib/x86_64-linux-gnu/ \
+&& ln -s libcuda.so /usr/lib/x86_64-linux-gnu/libcuda.so.1 \
+&& ln -s libnvidia-ml.so /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1 \
+## Remove Stubs - to solve this issue: https://discuss.ropensci.org/t/using-the-gpu-backend-in-h2o-xgboost-in-a-rocker-based-docker-container/1561/2
+&& rm -r -f  /usr/local/cuda/lib64/stubs
+
+ENV CUDA_HOME=/usr/local/cuda
+ENV CUDA_PATH=/usr/local/cuda
+ENV PATH=$CUDA_HOME/bin:$PATH
+ENV LD_LIBRARY_PATH=$CUDA_HOME/lib64:$CUDA_HOME/extras/CUPTI/lib64:$LD_LIBRARY_PATH
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility 
+
+# Install NVtop
+RUN git clone https://github.com/Syllo/nvtop.git \
  && mkdir -p nvtop/build && cd nvtop/build \
  && cmake .. \
  && make \
@@ -85,64 +41,21 @@ RUN wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/r
  && cd ../.. && rm -rf nvtop \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
- 
 
-ENV CUDA_HOME=/usr/local/cuda \
-  GUROBI_HOME=/opt/gurobi/linux64
-ENV PATH=$CUDA_HOME/bin:$GUROBI_HOME/bin:$PATH \
-  LD_LIBRARY_PATH=$CUDA_HOME/lib64:$CUDA_HOME/extras/CUPTI/lib64:${GUROBI_HOME}/lib:$LD_LIBRARY_PATH \
-  NVIDIA_VISIBLE_DEVICES=all \
-  NVIDIA_DRIVER_CAPABILITIES=compute,utility \
-  NVIDIA_REQUIRE_CUDA="cuda>=9.0"
+# Set up env variables in R
+RUN echo "rsession-ld-library-path=$LD_LIBRARY_PATH" | tee -a /etc/rstudio/rserver.conf \
+&& echo "Sys.setenv(CUDA_HOME=\"$CUDA_HOME\"); Sys.setenv(CUDA_PATH=\"$CUDA_PATH\"); Sys.setenv(PATH=\"$PATH\")" | tee -a /usr/local/lib/R/etc/Rprofile.site
 
-# Set up config files
-COPY config ./
-RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
-  && mv -f rsession.conf /etc/rstudio/rsession.conf \
-  && mv -f rserver.conf /etc/rstudio/rserver.conf \
-  && echo "rsession-ld-library-path=$LD_LIBRARY_PATH" | tee -a /etc/rstudio/rserver.conf \
-  && mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
-  && echo "Sys.setenv(CUDA_HOME=\"$CUDA_HOME\"); Sys.setenv(GUROBI_HOME=\"$GUROBI_HOME\"); Sys.setenv(PATH=\"$PATH\")" | tee -a /usr/local/lib/R/etc/Rprofile.site \
-  && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
-  && mv -f bash_settings.sh /etc/bash.bashrc \
-  && mv -f userconf.sh /etc/cont-init.d/conf \
-  && mv -f ccache.conf /etc/ccache.conf \
-  && mv -f byobu_status /usr/share/byobu/status/status \
-  && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
-  && echo 'set -g default-terminal "screen-256color"' | tee -a /usr/share/byobu/profiles/tmux
-
-# Tensorflow, Keras, Xgboost for GPU
+# Tensorflow, Keras for GPU
 RUN pip install wheel setuptools scipy --upgrade \
-  && pip install h5py pyyaml requests Pillow tensorflow-gpu keras dvc
-  
+  && pip install h5py pyyaml requests Pillow tensorflow-gpu keras
 
-### R config and packages
-RUN echo "CFLAGS=-w" >> /usr/local/lib/R/etc/Makevars.site \
-  &&  echo "CXXFLAGS=-w"  >> /usr/local/lib/R/etc/Makevars.site \
-  &&  echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
-  && MAKEFLAGS=-j$(nproc) \
-#  && echo "options(Ncpus=min(8, floor(parallel::detectCores()/2) + 1, na.rm = TRUE))" | tee -a /usr/local/lib/R/etc/Rprofile.site \
-  && installGithub.r s-u/unixtools \
-  && install2.r --error --skipinstalled \
-    rJava RcppArmadillo V8 rgrass7 ROI Rglpk ROI.plugin.glpk Rsymphony ROI.plugin.symphony  lme4 MonetDBLite rjags runjags rstan keras \
-    # robustbase ddalpha caret \
-    brms rstanarm plotly rasterVis doParallel doMC here fields threejs matrixStats fasterize cowplot optimx bayesplot shinystan fst assertr jqr ape vegan officer rvg pkgdown RcppGSL RcppZiggurat prioritizr aws.s3 aws.signature knitcitations goodpractice \
-  && Rscript -e 'install.packages("/opt/gurobi/linux64/R/gurobi_8.1-0_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'  \
-  && git clone --recursive https://github.com/dmlc/xgboost \
+# Xgboost
+RUN git clone --recursive https://github.com/dmlc/xgboost \
   && mkdir -p xgboost/build && cd xgboost/build \
   && cmake .. -DUSE_CUDA=ON -DR_LIB=ON \
   && make install -j$(nproc) \
   && mv $(Rscript -e "cat(.libPaths()[1])")/xgboost /usr/local/lib/R/site-library/xgboost \
-  && cd ../.. && rm -rf xgboost \
-## Cleanup
-  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages \
-  && ccache -C \
-  && unset MAKEFLAGS \
-## Turn on install parallelism after setup
-  && mv -f Makevars.site /usr/local/lib/R/etc/Makevars.site 
+  && cd ../.. && rm -rf xgboost
 
-## Add and run config files
 
-## Open ports
-
-EXPOSE 22 8787

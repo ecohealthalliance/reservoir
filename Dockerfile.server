@@ -34,9 +34,10 @@ ENV PATH=$GUROBI_HOME/bin:$PATH \
 RUN wget -q https://packages.gurobi.com/8.1/gurobi8.1.0_linux64.tar.gz \
   && tar xfz gurobi8.1.0_linux64.tar.gz -C /opt \
   && rm gurobi8.1.0_linux64.tar.gz \
-  && echo "Sys.setenv(GUROBI_HOME=\"$GUROBI_HOME\"); Sys.setenv(PATH=\"$PATH\")" 
-  && Rscript -e 'install.packages("/opt/gurobi/linux64/R/gurobi_8.1-0_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)'
-
+  && echo "Sys.setenv(GUROBI_HOME=\"$GUROBI_HOME\")" > /usr/local/lib/R/etc/Rprofile.site \
+  && Rscript -e 'install.packages("/opt/gurobi/linux64/R/gurobi_8.1-0_R_x86_64-pc-linux-gnu.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)' \
+  && echo "rsession-ld-library-path=$LD_LIBRARY_PATH" >> /etc/rstudio/rserver.conf \
+  && echo "Sys.setenv(PATH=\"$PATH\")" >>  /usr/local/lib/R/etc/Rprofile.site 
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so
 ## just create the run and finish scripts

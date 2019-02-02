@@ -21,7 +21,7 @@ libcudnn7 \
 libcudnn7-dev \
 && ls /usr/local/cuda-${CUDA_MAJOR_VERSION}/targets/x86_64-linux/lib/stubs/* | xargs -I{} ln -s {} /usr/lib/x86_64-linux-gnu/ \
 && ln -s libcuda.so /usr/lib/x86_64-linux-gnu/libcuda.so.1 \
-&& ln -s libnvidia-ml.so /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1 \
+&& ln -s libnvidia-ml.so /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1 \  
 ## Remove Stubs - to solve this issue: https://discuss.ropensci.org/t/using-the-gpu-backend-in-h2o-xgboost-in-a-rocker-based-docker-container/1561/2
 && rm -r -f  /usr/local/cuda/lib64/stubs
 
@@ -32,19 +32,23 @@ ENV LD_LIBRARY_PATH=$CUDA_HOME/lib64:$CUDA_HOME/extras/CUPTI/lib64:$LD_LIBRARY_P
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility 
 
-# Install NVtop
-RUN git clone https://github.com/Syllo/nvtop.git \
- && mkdir -p nvtop/build && cd nvtop/build \
- && cmake .. \
- && make \
- && make install \
- && cd ../.. && rm -rf nvtop \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+## Install NVtop
+# RUN apt-get update && apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-unauthenticated  -no-install-recommends --no-upgrade \
+#     libncurses5-dev \
+#     libncursesw5-dev \
+#  && git clone https://github.com/Syllo/nvtop.git \
+#  && mkdir -p nvtop/build && cd nvtop/build \
+#  && cmake .. \
+#  && make \
+#  && make install \
+#  && cd ../.. && rm -rf nvtop \
+#  && apt-get clean \
+#  && rm -rf /var/lib/apt/lists/*
 
 # Set up env variables in R
-RUN echo "rsession-ld-library-path=$LD_LIBRARY_PATH" | tee -a /etc/rstudio/rserver.conf \
-&& echo "Sys.setenv(CUDA_HOME=\"$CUDA_HOME\"); Sys.setenv(CUDA_PATH=\"$CUDA_PATH\"); Sys.setenv(PATH=\"$PATH\")" | tee -a /usr/local/lib/R/etc/Rprofile.site
+RUN echo "rsession-ld-library-path=$LD_LIBRARY_PATH" > /etc/rstudio/rserver.conf \
+&& echo "Sys.setenv(CUDA_HOME=\"$CUDA_HOME\"); Sys.setenv(CUDA_PATH=\"$CUDA_PATH\")" >> /usr/local/lib/R/etc/Rprofile.site \
+&& echo "Sys.setenv(PATH=\"$PATH\")" >> /usr/local/lib/R/etc/Rprofile.site 
 
 # Tensorflow, Keras for GPU
 RUN pip install wheel setuptools scipy --upgrade \
@@ -55,7 +59,7 @@ RUN git clone --recursive https://github.com/dmlc/xgboost \
   && mkdir -p xgboost/build && cd xgboost/build \
   && cmake .. -DUSE_CUDA=ON -DR_LIB=ON \
   && make install -j$(nproc) \
-  && mv $(Rscript -e "cat(.libPaths()[1])")/xgboost /usr/local/lib/R/site-library/xgboost \
+ # && mv -f $(Rscript -e "cat(.libPaths()[1])")/xgboost /usr/local/lib/R/site-library/ \
   && cd ../.. && rm -rf xgboost
 
 

@@ -4,6 +4,7 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 ## Install stuff
 
 ### Shiny
+COPY config/add_shiny.sh /etc/cont-init.d/add
 RUN export ADD=shiny && bash /etc/cont-init.d/add
 
 ### RStudio preview version

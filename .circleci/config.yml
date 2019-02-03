@@ -8,6 +8,7 @@ jobs:
            name: Build Base Container
            command: |
             ./build.sh
+           no_output_timeout: 60m
  build-and-deploy:
    machine: true
    steps:
@@ -16,7 +17,8 @@ jobs:
            name: Build Base Container
            command: |
             docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
-            ./build-and-push.
+            ./build-and-push
+           no_output_timeout: 60m
 workflows:
    version: 2
    commit:

@@ -6,6 +6,6 @@ for tag in apt rstan inla rpkg server gpu
 do
   image=ecohealthalliance/reservoir:$tag
   docker pull $image || true
-  docker build -f Dockerfile.$tag --cache-from $image -t $image .
+  docker build -q -f Dockerfile.$tag --cache-from $image -t $image .
   docker push $image
 done

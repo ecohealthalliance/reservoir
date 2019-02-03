@@ -21,7 +21,7 @@ workflows:
    version: 2
    commit:
      jobs:
-       - base-build:
+       - build:
            filters:
              branches:
                ignore:

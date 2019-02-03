@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -x
 
 for tag in apt rstan inla rpkg server gpu
 do

@@ -1,0 +1,9 @@
+FROM ecohealthalliance/reservoir:apt
+MAINTAINER "Noam Ross" ross@ecohealthalliance.org
+
+## Install R packages that need compilation
+RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
+  && install2.r --error --skipinstalled \
+  RcppEigen \
+  && rm /usr/local/lib/R/etc/Makevars.site \
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages

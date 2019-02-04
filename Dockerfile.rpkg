@@ -1,0 +1,62 @@
+FROM ecohealthalliance/reservoir:inla
+MAINTAINER "Noam Ross" ross@ecohealthalliance.org
+
+## Install R packages that need compilation
+RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
+  && install2.r --error --skipinstalled -n `nproc` \
+  bibtex \
+  brms \
+  fasterize \
+  fst \
+  hexbin \
+  jqr \
+  MonetDBLite \
+  officer \
+  prioritizr \
+  RcppArmadillo \
+  RcppGSL \
+  RcppZiggurat \
+  reticulate \
+  Rglpk \
+  rjags \
+  RJSONIO \
+  Rsymphony \
+  runjags \
+  rstanarm \
+  rvg \
+  shinystan \
+  slam \
+  vegan \
+  xgboost \
+  zip \
+  && rm /usr/local/lib/R/etc/Makevars.site \
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages
+  
+## Install the rest of the R packages
+RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
+  && install2.r --error --skipinstalled -n `nproc` \
+     assertr \ 
+     aws.s3 \
+     aws.signature \
+     bayesplot \
+     caret \
+     cowplot \
+     doMC \
+     doParallel \
+     here \ 
+     keras \
+     knitcitations \
+     loo \
+     optimx \
+     plotly \
+     rasterVis \
+     rgrass7 \
+     ROI \
+     ROI.plugin.glpk \
+     Rsymphony ROI.plugin.symphony \
+  && rm /usr/local/lib/R/etc/Makevars.site \
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages
+
+## Install GitHub R Packages
+RUN installGithub.r \
+    s-u/unixtools

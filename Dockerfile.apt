@@ -1,0 +1,67 @@
+FROM rocker/geospatial:latest
+MAINTAINER "Noam Ross" ross@ecohealthalliance.org
+
+## Additional apt packages
+RUN apt-get update && apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-unauthenticated --no-install-recommends --no-upgrade \
+  apt-transport-https \
+  build-essential \
+  byobu \
+  ccache \
+  cmake \
+  coinor-libcgl-dev \
+  coinor-libsymphony-dev \
+  coinor-symphony \
+  coinor-symphony \
+  curl \
+  dirmngr \
+  fish \
+  git-core \
+  gnupg2 \
+  gnupg \
+  golang-1.8 \
+  golang-go \
+  graphviz \
+  grass \
+  grass-dev \
+  grass-doc \
+  htop \
+  jags \
+  libclang-dev \
+  libglpk-dev \
+  libgoogle-perftools-dev \
+  libleptonica-dev \
+  libnlopt-dev \
+  libopenmpi-dev \
+  libpoppler-cpp-dev \
+  libprotobuf-dev \
+  libprotoc-dev \
+  libsodium-dev \
+  libtesseract-dev \
+  lsb-release \
+  man \
+  mosh \
+  ncdu \
+  protobuf-compiler \
+  pv \
+  python-dev \
+  python-pip \
+  python-setuptools \
+  ruby-full \
+  silversearcher-ag \
+  software-properties-common \
+  tesseract-ocr-eng \
+  tmux \
+  xclip \
+  zsh \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/
+
+# Non-apt linux package installs
+### micro
+RUN curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin 
+
+# Allow future R script installs to use the parallel version of install in littler
+RUN installGithub.r eddelbuettel/littler \
+  && ln -sf /usr/local/lib/R/site-library/littler/examples/install2.r /usr/local/bin/install2.r \
+  && ln -sf /usr/local/lib/R/site-library/littler/examples/installGithub.r /usr/local/bin/installGithub.r \
+  && ln -sf /usr/local/lib/R/site-library/littler/bin/r /usr/local/bin/r 

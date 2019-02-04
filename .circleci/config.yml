@@ -1,72 +1,39 @@
 version: 2
 jobs:
- base-build:
+ build:
    machine: true
    steps:
      - checkout
      - run:
            name: Build Base Container
            command: |
-            docker build -f Dockerfile.base -t ecohealthalliance/reservoir .
- base-build-and-deploy:
+            ./build.sh
+           no_output_timeout: 60m
+ build-and-deploy:
    machine: true
    steps:
      - checkout
      - run:
            name: Build Base Container
            command: |
-            docker build -f Dockerfile.base -t ecohealthalliance/reservoir .
-     - deploy:
-           name: Push to Docker Hub
-           command: |
-              docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
-              docker push ecohealthalliance/reservoir
- gpu-build:
-   machine: true
-   steps:
-     - checkout
-     - run:
-           name: Build GPU Container
-           command: |
-            docker build -f Dockerfile.gpu -t ecohealthalliance/reservoir:gpu .
- gpu-build-and-deploy:
-   machine: true
-   steps:
-     - checkout
-     - run:
-           name: Build GPU Container
-           command: |
-            docker build -f Dockerfile.gpu -t ecohealthalliance/reservoir:gpu .
-     - deploy:
-           name: Push to Docker Hub
-           command: |
-              docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
-              docker push ecohealthalliance/reservoir:gpu
-
+             docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
+             ./build-and-push
+           no_output_timeout: 60m
 workflows:
    version: 2
    commit:
      jobs:
-       - base-build:
+       - build:
            filters:
              branches:
                ignore:
                  - master       
-       - gpu-build:
-           filters:
-             branches:
-               ignore:
-                 - master
-       - base-build-and-deploy:
+       - build-and-deploy:
            filters:
              branches:
                only:
                  - master
-       - gpu-build-and-deploy:
-           filters:
-             branches:
-               only:
-                 - master
+                 
    weekly:
      triggers:
        - schedule:
@@ -76,5 +43,4 @@ workflows:
                only:
                  - master
      jobs:
-       - base-build-and-deploy
-       - gpu-build-and-deploy
+       - build-and-deploy

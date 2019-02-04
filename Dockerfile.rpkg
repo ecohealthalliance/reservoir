@@ -5,6 +5,7 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
   && install2.r --error --skipinstalled -n `nproc` \
   bibtex \
+  brms \
   fasterize \
   fst \
   hexbin \
@@ -18,11 +19,12 @@ RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
   reticulate \
   Rglpk \
   rjags \
-  rJava \
   RJSONIO \
   Rsymphony \
   runjags \
+  rstanarm \
   rvg \
+  shinystan \
   slam \
   vegan \
   xgboost \
@@ -36,6 +38,7 @@ RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
      assertr \ 
      aws.s3 \
      aws.signature \
+     bayesplot \
      caret \
      cowplot \
      doMC \
@@ -43,6 +46,7 @@ RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
      here \ 
      keras \
      knitcitations \
+     loo \
      optimx \
      plotly \
      rasterVis \

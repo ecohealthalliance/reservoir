@@ -2,7 +2,10 @@
 
 A docker image for EHA's modeling and analytics work servers.
 
-[![CircleCI](https://circleci.com/gh/ecohealthalliance/reservoir.svg?style=svg)](https://circleci.com/gh/ecohealthalliance/reservoir) [![license](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://opensource.org/licenses/GPL-2.0)  [![](https://images.microbadger.com/badges/image/ecohealthalliance/reservoir:server.svg)]((https://hub.docker.com/r/ecohealthalliance/reservoir) [![](https://images.microbadger.com/badges/image/ecohealthalliance/reservoir:gpu.svg)]((https://hub.docker.com/r/ecohealthalliance/reservoir)
+[![CircleCI](https://circleci.com/gh/ecohealthalliance/reservoir.svg?style=svg)](https://circleci.com/gh/ecohealthalliance/reservoir)
+[![license](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://opensource.org/licenses/GPL-2.0)
+[![Server Image](https://images.microbadger.com/badges/image/ecohealthalliance/reservoir:server.svg)](https://hub.docker.com/r/ecohealthalliance/reservoir)
+[![GPU Image](https://images.microbadger.com/badges/image/ecohealthalliance/reservoir:gpu.svg)](https://hub.docker.com/r/ecohealthalliance/reservoir)
 
 
 

@@ -51,8 +51,8 @@ RUN echo "rsession-ld-library-path=$LD_LIBRARY_PATH" > /etc/rstudio/rserver.conf
 && echo "Sys.setenv(PATH=\"$PATH\")" >> /usr/local/lib/R/etc/Rprofile.site 
 
 # Tensorflow, Keras for GPU
-RUN pip install wheel setuptools scipy --upgrade \
-  && pip install h5py pyyaml requests Pillow tensorflow-gpu keras
+RUN pip install wheel setuptools scipy --upgrade --no-cache-dir \
+  && pip install h5py pyyaml requests Pillow tensorflow-gpu keras --no-cache-dir
 
 # Xgboost
 RUN git clone --recursive https://github.com/dmlc/xgboost \

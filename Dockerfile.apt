@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-remove-essen
   coinor-libsymphony-dev \
   coinor-symphony \
   coinor-symphony \
+  cron \
   curl \
   dirmngr \
   fish \

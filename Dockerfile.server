@@ -3,6 +3,18 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 
 ## Install stuff
 
+### Gurobi
+ENV GUROBI_HOME=/opt/gurobi810/linux64
+ENV PATH=$GUROBI_HOME/bin:$PATH \
+    LD_LIBRARY_PATH=$GUROBI_HOME/lib:$LD_LIBRARY_PATH
+RUN wget -q https://packages.gurobi.com/8.1/gurobi8.1.0_linux64.tar.gz \
+  && tar xfz gurobi8.1.0_linux64.tar.gz -C /opt \
+  && rm gurobi8.1.0_linux64.tar.gz \
+  && echo "Sys.setenv(GUROBI_HOME=\"$GUROBI_HOME\")" > /usr/local/lib/R/etc/Rprofile.site \
+  && Rscript -e 'install.packages("/opt/gurobi810/linux64/R/gurobi_8.1-0_R_3.5.0.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)' \
+  && echo "rsession-ld-library-path=$LD_LIBRARY_PATH" >> /etc/rstudio/rserver.conf \
+  && echo "Sys.setenv(PATH=\"$PATH\")" >>  /usr/local/lib/R/etc/Rprofile.site
+
 ### Shiny
 COPY config/add_shiny.sh /etc/cont-init.d/add
 RUN export ADD=shiny && bash /etc/cont-init.d/add
@@ -18,6 +30,8 @@ COPY config ./
 RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f rsession.conf /etc/rstudio/rsession.conf \
   && mv -f rserver.conf /etc/rstudio/rserver.conf \
+  && mv -f rstudio-login.html /etc/rstudio/login.html \
+  && mv -f EHA_Logo_369C.png /usr/lib/rstudio-server/www/images/EHA_Logo_369C.png \
   && mv -f shiny-server.conf /etc/shiny-server/shiny-server.conf \
   && mv -f Rprofile.site /usr/local/lib/R/etc/Rprofile.site \
   && mv -f Renviron.site /usr/local/lib/R/etc/Renviron.site \
@@ -28,18 +42,6 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f byobu_statusrc /usr/share/byobu/status/statusrc \
   && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
   && echo 'set -g default-terminal "screen-256color"' >> /usr/share/byobu/profiles/tmux
-
-### Gurobi
-ENV GUROBI_HOME=/opt/gurobi810/linux64
-ENV PATH=$GUROBI_HOME/bin:$PATH \
-    LD_LIBRARY_PATH=$GUROBI_HOME/lib:$LD_LIBRARY_PATH
-RUN wget -q https://packages.gurobi.com/8.1/gurobi8.1.0_linux64.tar.gz \
-  && tar xfz gurobi8.1.0_linux64.tar.gz -C /opt \
-  && rm gurobi8.1.0_linux64.tar.gz \
-  && echo "Sys.setenv(GUROBI_HOME=\"$GUROBI_HOME\")" > /usr/local/lib/R/etc/Rprofile.site \
-  && Rscript -e 'install.packages("/opt/gurobi810/linux64/R/gurobi_8.1-0_R_3.5.0.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)' \
-  && echo "rsession-ld-library-path=$LD_LIBRARY_PATH" >> /etc/rstudio/rserver.conf \
-  && echo "Sys.setenv(PATH=\"$PATH\")" >>  /usr/local/lib/R/etc/Rprofile.site
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so
 ## just create the run and finish scripts

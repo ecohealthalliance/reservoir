@@ -1,0 +1,23 @@
+<script type="text/javascript">
+window.onload=function(){
+
+var logo = document.createElement("img");
+logo.setAttribute("src","images/EHA_Logo_369C.png");
+logo.setAttribute("height", "27px");
+logo.setAttribute("style", "float: right;");
+logo.setAttribute("title", "EcoHealth Alliance")
+var link = document.createElement("a");
+link.setAttribute("href", "https://www.ecohealthalliance.org/")
+link.appendChild(logo)
+var banner = document.getElementById("banner")
+banner.appendChild(link);
+
+var cap = document.getElementById("caption");
+cap.innerHTML = "Sign in to The EcoHealth Alliance RStudio Server";
+}
+</script>
+
+<style>
+#caption {border-bottom-color: #64A70B;}
+</style>
+

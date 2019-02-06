@@ -25,9 +25,10 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f bash_settings.sh /etc/bash.bashrc \
   && mv -f userconf.sh /etc/cont-init.d/conf \
   && mv -f byobu_status /usr/share/byobu/status/status \
+  && mv -f byobu_statusrc /usr/share/byobu/status/statusrc \
   && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
   && echo 'set -g default-terminal "screen-256color"' >> /usr/share/byobu/profiles/tmux
-  
+
 ### Gurobi
 ENV GUROBI_HOME=/opt/gurobi810/linux64
 ENV PATH=$GUROBI_HOME/bin:$PATH \
@@ -38,14 +39,14 @@ RUN wget -q https://packages.gurobi.com/8.1/gurobi8.1.0_linux64.tar.gz \
   && echo "Sys.setenv(GUROBI_HOME=\"$GUROBI_HOME\")" > /usr/local/lib/R/etc/Rprofile.site \
   && Rscript -e 'install.packages("/opt/gurobi810/linux64/R/gurobi_8.1-0_R_3.5.0.tar.gz", lib="/usr/local/lib/R/site-library", repos = NULL)' \
   && echo "rsession-ld-library-path=$LD_LIBRARY_PATH" >> /etc/rstudio/rserver.conf \
-  && echo "Sys.setenv(PATH=\"$PATH\")" >>  /usr/local/lib/R/etc/Rprofile.site 
+  && echo "Sys.setenv(PATH=\"$PATH\")" >>  /usr/local/lib/R/etc/Rprofile.site
 
 ## Setup SSH. s6 supervisor already installed for RStudio, so
 ## just create the run and finish scripts
 RUN mkdir -p /var/run/sshd \
   && mkdir -p /etc/services.d/sshd \
   && echo '#!/bin/bash \nexec /usr/sbin/sshd -D' > /etc/services.d/sshd/run \
-  && echo '#!/bin/bash \n service ssh stop' > /etc/services.d/sshd/finish \ 
+  && echo '#!/bin/bash \n service ssh stop' > /etc/services.d/sshd/finish \
   && sed -i 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config \
   && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config \
   && echo "AllowGroups ssh-users" >> /etc/ssh/sshd_config

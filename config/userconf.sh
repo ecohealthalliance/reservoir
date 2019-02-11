@@ -90,6 +90,11 @@ if [ "$UMASK" -ne 022 ]
 fi
 
 fi
+
+# Make crontabs writable by crontab group
+chown :crontab /var/spool/cron/crontabs
+chmod g+w /var/spool/cron/crontabs
+
 ## add these to the global environment so they are avialable to the RStudio user
 echo "HTTR_LOCALHOST=$HTTR_LOCALHOST" >> /etc/R/Renviron.site
 echo "HTTR_PORT=$HTTR_PORT" >> /etc/R/Renviron.site

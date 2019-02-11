@@ -1,24 +1,70 @@
 version: 2
 jobs:
- build:
-   machine: true
-   steps:
-     - checkout
-     - run:
-           name: Build Base Container
-           command: |
+  build:
+    machine: true
+    steps:
+      - checkout
+      - restore_cache:
+         keys:
+           - image-{{ checksum ".circleci/config.yml" }}
+           - image-
+      - run:
+          name: Load cached images
+          command: |
+            docker load -i /cached_images/reservoir.tar || true
+      - run:
+          name: Build Containers
+          command: |
             ./build.sh
-           no_output_timeout: 60m
- build-and-deploy:
-   machine: true
-   steps:
-     - checkout
-     - run:
-           name: Build Base Container
-           command: |
-             docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
-             ./build-and-push.sh
-           no_output_timeout: 60m
+            no_output_timeout: 60m
+      - run:
+         name: Save images
+         command: |
+           mkdir -p /cached_images
+           docker save -o /cached_images/reservoir.tar
+      - save_cache:
+         key: image-{{ checksum ".circleci/config.yml" }}
+         paths:
+           - /cached_images
+  build-and-deploy:
+    machine: true
+    steps:
+      - checkout
+      - restore_cache:
+         keys:
+         - image-{{ checksum ".circleci/config.yml" }}
+         - image-
+      - run:
+          name: Load cached images
+          command: |
+            docker load -i /cached_images/reservoir.tar
+      - run:
+          name: Build Containers
+          command: |
+            ./build.sh
+            no_output_timeout: 60m
+      - run:
+         name: Save images
+         command: |
+           mkdir -p /cached_images
+           docker save ecohealthalliance/reservoir -o /cached_images/reservoir.tar
+      -  run:
+         name: Push images
+         command: |
+          ./push.sh
+      - save_cache:
+        key: image-{{ checksum ".circleci/config.yml" }}
+        paths:
+          - /cached_images
+  ping:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Ping Docker Hub
+          command: |
+            curl -X POST https://cloud.docker.com/api/build/v1/source/31752866-2a40-403d-8e92-55b6b529c3e9/trigger/d9ef35f5-c0d5-45ae-8279-7f4832f96088/call/
+
 workflows:
    version: 2
    commit:
@@ -44,3 +90,14 @@ workflows:
                  - master
      jobs:
        - build-and-deploy
+   daily:
+     triggers:
+       - schedule:
+           cron: "0 23 * * *"
+           filters:
+             branches:
+               only:
+                 - master
+     jobs:
+       - ping
+

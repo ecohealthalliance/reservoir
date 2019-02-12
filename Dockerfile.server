@@ -52,6 +52,11 @@ RUN mv /usr/bin/mosh-server /usr/bin/mosh-server-original \
 # Get Docker itself
 RUN curl -sSL https://get.docker.com/ | sh
 
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+  && echo $TZ > /etc/timezone \
+  && dpkg-reconfigure --frontend noninteractive tzdata
+
 ## Setup SSH. s6 supervisor already installed for RStudio, so
 ## just create the run and finish scripts
 RUN mkdir -p /var/run/sshd \

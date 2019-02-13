@@ -40,6 +40,7 @@ RUN chmod +x /motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh \
   && mv -f userconf.sh /etc/cont-init.d/conf \
   && mv -f byobu_status /usr/share/byobu/status/status \
   && mv -f byobu_statusrc /usr/share/byobu/status/statusrc \
+  && mv -f byoburc /usr/share/byobu/profiles/byoburc \
   && ln -s /usr/bin/byobu-launch /etc/profile.d/Z98-byobu.sh \
   && echo 'set -g default-terminal "screen-256color"' >> /usr/share/byobu/profiles/tmux
 

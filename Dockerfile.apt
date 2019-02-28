@@ -55,6 +55,8 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-remove-essen
   tmux \
   xclip \
   zsh \
+  && echo 'deb http://download.opensuse.org/repositories/shells:/fish/Debian_9.0/ /' > /etc/apt/sources.list.d/shells:fish.list \
+  && apt-get update && apt-get install fish \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/
 

@@ -11,7 +11,6 @@ RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
   hexbin \
   jqr \
   lobstr \
-  MonetDBLite \
   officer \
   prioritizr \
   profmem \

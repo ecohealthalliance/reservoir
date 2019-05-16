@@ -55,6 +55,9 @@ RUN pip install wheel setuptools scipy --upgrade --no-cache-dir \
   && pip install h5py pyyaml requests Pillow tensorflow-gpu keras --no-cache-dir
 
 # Xgboost
+RUN echo 'deb http://deb.debian.org/debian stretch-backports main' >> /etc/apt/sources.list \
+  && apt-get update -y
+RUN apt-get -t stretch-backports install -y cmake
 RUN git clone --recursive https://github.com/dmlc/xgboost \
   && mkdir -p xgboost/build && cd xgboost/build \
   && cmake .. -DUSE_CUDA=ON -DR_LIB=ON \

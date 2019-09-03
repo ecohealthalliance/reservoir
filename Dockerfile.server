@@ -66,6 +66,9 @@ RUN mkdir -p /var/run/sshd \
   && echo '#!/bin/bash \n service ssh stop' > /etc/services.d/sshd/finish \
   && sed -i 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config \
   && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config \
-  && echo "AllowGroups ssh-users" >> /etc/ssh/sshd_config
+  && echo "AllowGroups ssh-users" >> /etc/ssh/sshd_config \
+## Also setup cron \
+  && mkdir -p /etc/services.d/cron \
+  && echo '#!/usr/bin/with-contenv sh\ntouch /etc/crontab /etc/cron.*/*\nexec cron -f' > /etc/services.d/cron/run
 
 EXPOSE 22 8787 3838

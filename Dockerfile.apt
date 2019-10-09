@@ -49,6 +49,7 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-remove-essen
   python-dev \
   python-pip \
   python-setuptools \
+  rename  \
   ruby-full \
   silversearcher-ag \
   software-properties-common \
@@ -62,6 +63,12 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-remove-essen
 # Non-apt linux package installs
 ### micro
 RUN curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004fa5feaf24/raw/a43e603e62205e1074775d756ef98c3fc77f6f8d/install_micro.sh | bash -s linux64 /usr/bin
+## nnn
+RUN wget https://github.com/jarun/nnn/releases/download/v2.7/nnn_2.7-1_debian9.amd64.deb \
+  && dpkg -i nnn_2.7-1_debian9.amd64.deb \
+  && rm nnn_2.7-1_debian9.amd64.deb
+
+
 
 # Allow future R script installs to use the parallel version of install in littler
 RUN installGithub.r eddelbuettel/littler \

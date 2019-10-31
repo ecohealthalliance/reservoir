@@ -18,7 +18,6 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-remove-essen
   curl \
   dirmngr \
   fish \
-  fzf \
   git-core \
   git-crypt \
   gnupg2 \
@@ -75,7 +74,10 @@ RUN curl -sL https://gist.githubusercontent.com/zyedidia/d4acfcc6acf2d0d75e79004
 ## nnn
 RUN wget https://github.com/jarun/nnn/releases/download/v2.7/nnn_2.7-1_debian9.amd64.deb \
   && dpkg -i nnn_2.7-1_debian9.amd64.deb \
-  && rm nnn_2.7-1_debian9.amd64.deb
+  && rm nnn_2.7-1_debian9.amd64.deb \
+  && wget https://github.com/sharkdp/bat/releases/download/v0.12.1/bat_0.12.1_amd64.deb \
+  && sudo dpkg -i bat_0.12.1_amd64.deb \
+  && rm bat_0.12.1_amd64.deb 
 
 
 

@@ -8,9 +8,12 @@ RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
   brms \
   fasterize \
   fst \
+  greta \
   hexbin \
+  h2o \
   jqr \
   officer \
+  packrat \
   prioritizr \
   profmem \
   profvis \
@@ -27,6 +30,7 @@ RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
   rvg \
   shinystan \
   slam \
+  tidymodels \
   vegan \
   xgboost \
   zip \

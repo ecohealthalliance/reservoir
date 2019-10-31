@@ -5,7 +5,6 @@ MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 RUN apt-get update && apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-unauthenticated --no-install-recommends --no-upgrade \
   aria2 \
   apt-transport-https \
-  bat \
   build-essential \
   byobu \
   ccache \

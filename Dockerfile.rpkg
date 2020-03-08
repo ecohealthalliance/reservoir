@@ -41,8 +41,6 @@ RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
 RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
   && install2.r --error --skipinstalled -n `nproc` \
      assertr \ 
-     aws.s3 \
-     aws.signature \
      bayesplot \
      caret \
      cowplot \

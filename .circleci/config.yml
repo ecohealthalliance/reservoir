@@ -18,7 +18,7 @@ jobs:
            command: |
              docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASS
              ./build-and-push.sh
-           no_output_timeout: 60m
+           no_output_timeout: 180m
 workflows:
    version: 2
    commit:

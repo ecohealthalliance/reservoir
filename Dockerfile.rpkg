@@ -2,8 +2,7 @@ FROM ecohealthalliance/reservoir:inla
 MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 
 ## Install R packages that need compilation
-RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
-  && install2.r --error --skipinstalled -n `nproc` \
+RUN install2.r --error --skipinstalled \
   bibtex \
   brms \
   fasterize \

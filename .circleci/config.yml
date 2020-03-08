@@ -8,7 +8,7 @@ jobs:
            name: Build Base Container
            command: |
             ./build.sh
-           no_output_timeout: 60m
+           no_output_timeout: 180m
  build-and-deploy:
    machine: true
    steps:

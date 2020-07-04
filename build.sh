@@ -3,7 +3,7 @@
 set -e 
 set -x
 
-for tag in apt rcppeigen rstan inla rpkg server gpu
+for tag in base gpu
 do
   image=ecohealthalliance/reservoir:$tag
  # time docker pull $image > /dev/null

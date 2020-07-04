@@ -33,6 +33,7 @@ install2.r --error --skipinstalled \
   slam \
   tidymodels \
   vegan \
+  vroom \
   xgboost \
   zip
 

@@ -66,14 +66,14 @@ apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-he
   tree \
   whois \
   xclip \
-  zsh \
-  docker \
-  docker-compose \
-  docker.io
+  zsh
 
 apt-get clean
 rm -rf /var/lib/apt/lists/
 
-wget https://raw.githubusercontent.com/rupa/z/master/z.sh -O /usr/bin/z
 
-echo "Done!"
+### Docker
+curl -sSL https://get.docker.com/ | sh
+
+### Z
+wget https://raw.githubusercontent.com/rupa/z/master/z.sh -O /usr/bin/z

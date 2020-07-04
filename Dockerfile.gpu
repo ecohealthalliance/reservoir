@@ -1,68 +1,24 @@
-FROM ecohealthalliance/reservoir:server
+FROM ecohealthalliance/reservoir:base
 MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 
-## CUDA Version
-ENV CUDA_MAJOR_VERSION=9.2
-ENV CUDA_MAJOR_VERSION_HYP=9.2
-ENV CUDA_MINOR_VERSION=9.2.148-1
-ENV NVIDIA_REQUIRE_CUDA="cuda>=9.2"
-
-## CUDA Install
-RUN wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub \
-&& echo "47217c49dcb9e47a8728b354450f694c9898cd4a126173044a69b1e9ac0fba96  /root/manual/7fa2af80.pub" | sha256sum -c --strict - \
-&& apt-key add /root/manual/7fa2af80.pub \
-&& wget -nv -P /root/manual http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_${CUDA_MINOR_VERSION}_amd64.deb \
-&& dpkg -i /root/manual/cuda-repo-ubuntu1604_${CUDA_MINOR_VERSION}_amd64.deb \
-&& echo 'deb http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64 /' > /etc/apt/sources.list.d/nvidia-ml.list \
-&& rm -rf /root/manual \
-&& apt-get update  && apt-get install --no-install-recommends -y \
-cuda-toolkit-${CUDA_MAJOR_VERSION_HYP} \
-libcudnn7 \
-libcudnn7-dev \
-&& ls /usr/local/cuda-${CUDA_MAJOR_VERSION}/targets/x86_64-linux/lib/stubs/* | xargs -I{} ln -s {} /usr/lib/x86_64-linux-gnu/ \
-&& ln -s libcuda.so /usr/lib/x86_64-linux-gnu/libcuda.so.1 \
-&& ln -s libnvidia-ml.so /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1 \  
-## Remove Stubs - to solve this issue: https://discuss.ropensci.org/t/using-the-gpu-backend-in-h2o-xgboost-in-a-rocker-based-docker-container/1561/2
-&& rm -r -f  /usr/local/cuda/lib64/stubs
-
-ENV CUDA_HOME=/usr/local/cuda
-ENV CUDA_PATH=/usr/local/cuda
-ENV PATH=$CUDA_HOME/bin:$PATH
-ENV LD_LIBRARY_PATH=$CUDA_HOME/lib64:$CUDA_HOME/extras/CUPTI/lib64:$LD_LIBRARY_PATH
+ENV CUDA_VERSION=10.1.243
+ENV CUDA_PKG_VERSION=10-1=$CUDA_VERSION-1
 ENV NVIDIA_VISIBLE_DEVICES=all
-ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility 
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+ENV NVIDIA_REQUIRE_CUDA=cuda>=10.1 brand=tesla,driver>=384,driver<385 brand=tesla,driver>=396,driver<397 brand=tesla,driver>=410,driver<411
+ENV CUDA_HOME=/usr/local/cuda
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_HOME/lib64:$CUDA_HOME/extras/CUPTI/lib64:$CUDA_HOME/lib64/libnvblas.so:
+ENV NVBLAS_CONFIG_FILE=/etc/nvblas.conf
+ENV WORKON_HOME=/opt/venv
+ENV PYTHON_VENV_PATH=/opt/venv/reticulate
+ENV RETICULATE_AUTOCONFIGURE=0
+ENV PATH=${PYTHON_VENV_PATH}/bin:${PATH}:${CUDA_HOME}/bin
 
-## Install NVtop
-# RUN apt-get update && apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-unauthenticated  -no-install-recommends --no-upgrade \
-#     libncurses5-dev \
-#     libncursesw5-dev \
-#  && git clone https://github.com/Syllo/nvtop.git \
-#  && mkdir -p nvtop/build && cd nvtop/build \
-#  && cmake .. \
-#  && make \
-#  && make install \
-#  && cd ../.. && rm -rf nvtop \
-#  && apt-get clean \
-#  && rm -rf /var/lib/apt/lists/*
+RUN /rocker_scripts/install_cuda-10.1.sh
+RUN /rocker_scripts/config_R_cuda.sh
 
-# Set up env variables in R
-RUN echo "rsession-ld-library-path=$LD_LIBRARY_PATH" > /etc/rstudio/rserver.conf \
-&& echo "Sys.setenv(CUDA_HOME=\"$CUDA_HOME\"); Sys.setenv(CUDA_PATH=\"$CUDA_PATH\")" >> /usr/local/lib/R/etc/Rprofile.site \
-&& echo "Sys.setenv(PATH=\"$PATH\")" >> /usr/local/lib/R/etc/Rprofile.site 
+COPY scripts/install_xgboost.sh /reservoir_scripts/install_xgboost.sh
+RUN /reservoir_scripts/install_xgboost.sh
 
-# Tensorflow, Keras for GPU
-RUN pip install wheel setuptools scipy --upgrade --no-cache-dir \
-  && pip install h5py pyyaml requests Pillow tensorflow-gpu keras --no-cache-dir
-
-# Xgboost
-RUN echo 'deb http://deb.debian.org/debian stretch-backports main' >> /etc/apt/sources.list \
-  && apt-get update -y
-RUN apt-get -t stretch-backports install -y cmake
-RUN git clone --recursive https://github.com/dmlc/xgboost \
-  && mkdir -p xgboost/build && cd xgboost/build \
-  && cmake .. -DUSE_CUDA=ON -DR_LIB=ON \
-  && make install -j$(nproc) \
- # && mv -f $(Rscript -e "cat(.libPaths()[1])")/xgboost /usr/local/lib/R/site-library/ \
-  && cd ../.. && rm -rf xgboost
 
 

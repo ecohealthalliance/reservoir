@@ -1,3 +1,4 @@
 IS_RESERVOIR=true
 TEMPDIR=~/.tmp
 R_LIBS_USER=~/R/%p-library/%v
+RENV_PATHS_CACHE=/home/shared/renv_shared_cache/

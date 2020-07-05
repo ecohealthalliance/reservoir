@@ -1,5 +1,8 @@
 # Xgboost
 
+set -e
+set -x
+
 apt-get update
 apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-unauthenticated --no-install-recommends --no-upgrade \
   gcc-8 \

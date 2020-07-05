@@ -61,6 +61,7 @@ apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-he
   rsync \
   silversearcher-ag \
   software-properties-common \
+  openssh-server \
   tesseract-ocr-eng \
   tmux \
   tree \

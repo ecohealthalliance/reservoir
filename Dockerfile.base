@@ -23,7 +23,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
   && echo $TZ > /etc/timezone \
   && dpkg-reconfigure --frontend noninteractive tzdata
 
-COPY /scripts/server_config.sh /reservoir_scripts/sever_config.sh
+COPY /scripts/server_config.sh /reservoir_scripts/server_config.sh
 COPY config /reservoir_config
 RUN /reservoir_scripts/server_config.sh
   

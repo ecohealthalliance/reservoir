@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set up config files
-chmod +x /reservoir_config/motd.sh; sync; ./motd.sh > /etc/motd; rm motd.sh
+chmod +x /reservoir_config/motd.sh; sync; ./reservoir_config/motd.sh > /etc/motd
 mv -f /reservoir_config/rsession.conf /etc/rstudio/rsession.conf
 mv -f /reservoir_config/rserver.conf /etc/rstudio/rserver.conf
 mv -f /reservoir_config/rstudio-login.html /etc/rstudio/login.html

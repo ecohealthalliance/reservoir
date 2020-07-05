@@ -19,6 +19,7 @@ install2.r --error --skipinstalled \
      optimx \
      patchwork \
      plotly \
+     renv \
      rasterVis \
      rgrass7 \
      ROI \

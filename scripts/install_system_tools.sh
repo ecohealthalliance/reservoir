@@ -75,6 +75,9 @@ rm -rf /var/lib/apt/lists/
 
 ### Docker
 curl -sSL https://get.docker.com/ | sh
+sudo curl -L "https://github.com/docker/compose/releases/download/1.26.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo curl -L https://raw.githubusercontent.com/docker/compose/1.26.1/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
 
 ### Z
 wget https://raw.githubusercontent.com/rupa/z/master/z.sh -O /usr/bin/z

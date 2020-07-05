@@ -29,10 +29,16 @@ chmod +x /usr/bin/mosh-server
 ## just create the run and finish scripts
 mkdir -p /var/run/sshd
 mkdir -p /etc/services.d/sshd
-echo '#!/bin/bash \nexec /usr/sbin/sshd -D' > /etc/services.d/sshd/run
-echo '#!/bin/bash \n service ssh stop' > /etc/services.d/sshd/finish
+echo "#!/bin/bash
+exec /usr/sbin/sshd -D
+" > /etc/services.d/sshd/run
+echo "#!/bin/bash
+service ssh stop
+" > /etc/services.d/sshd/finish
 sed -i 's/PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config
 echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
 echo "AllowGroups ssh-users" >> /etc/ssh/sshd_config
 mkdir -p /etc/services.d/cron
-echo '#!/usr/bin/with-contenv sh\ntouch /etc/crontab /etc/cron.*/*\nexec cron -f' > /etc/services.d/cron/run
+echo "#!/bin/bash
+touch /etc/crontab /etc/cron.*/*
+exec cron -f" > /etc/services.d/cron/run

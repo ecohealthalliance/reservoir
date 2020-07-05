@@ -1,0 +1,33 @@
+FROM rocker/geospatial:4.0.2
+MAINTAINER "Noam Ross" ross@ecohealthalliance.org
+
+ENV PYTHON_VENV_PATH=/opt/venv/reticulate
+RUN /rocker_scripts/install_python.sh
+
+COPY scripts/install_system_tools.sh /reservoir_scripts/install_system_tools.sh
+RUN /reservoir_scripts/install_system_tools.sh
+
+COPY scripts/install_eigen_stan_inla.sh /reservoir_scripts/install_eigen_stan_inla.sh
+RUN /reservoir_scripts/install_eigen_stan_inla.sh
+
+COPY scripts/install_r_pkgs_compiled.sh /reservoir_scripts/install_r_pkgs_compiled.sh
+RUN /reservoir_scripts/install_r_pkgs_compiled.sh
+
+COPY scripts/install_r_pkgs_other.sh /reservoir_scripts/install_r_pkgs_other.sh
+RUN /reservoir_scripts/install_r_pkgs_other.sh
+
+RUN /rocker_scripts/install_shiny_server.sh
+
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+  && echo $TZ > /etc/timezone \
+  && dpkg-reconfigure --frontend noninteractive tzdata
+
+COPY /scripts/server_config.sh /reservoir_scripts/server_config.sh
+COPY config /reservoir_config
+RUN /reservoir_scripts/server_config.sh
+  
+EXPOSE 22 8787 3838
+
+
+

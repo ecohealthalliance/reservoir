@@ -1,8 +1,0 @@
-FROM ecohealthalliance/reservoir:rstan
-MAINTAINER "Noam Ross" ross@ecohealthalliance.org
-
-## Install R packages that need compilation
-RUN echo "MAKEFLAGS=-j$(nproc)"  >> /usr/local/lib/R/etc/Makevars.site \
-  && Rscript -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dependencies=TRUE, Ncpus = parallel::detectCores())" \
-  && rm /usr/local/lib/R/etc/Makevars.site \
-  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages

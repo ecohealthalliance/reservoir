@@ -10,6 +10,7 @@ apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-he
 
 git clone --recursive https://github.com/dmlc/xgboost
 mkdir -p xgboost/build && cd xgboost/build
-CC=gcc-8 CXX=g++-8 cmake .. -DUSE_CUDA=ON 
-CC=gcc-8 CXX=g++-8 make 
+CC=gcc-8 CXX=g++-8 cmake .. -DUSE_CUDA=ON -DR_LIB=ON
+CC=gcc-8 CXX=g++-8 make install
 cd ../.. && rm -rf xgboost
+

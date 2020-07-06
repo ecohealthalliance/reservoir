@@ -80,5 +80,9 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.26.1/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 sudo curl -L https://raw.githubusercontent.com/docker/compose/1.26.1/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
 
+# Dive (for exploring docker images)
+wget https://github.com/wagoodman/dive/releases/download/v0.9.2/dive_0.9.2_linux_amd64.deb
+apt install ./dive_0.9.2_linux_amd64.deb
+
 ### Z
 wget https://raw.githubusercontent.com/rupa/z/master/z.sh -O /usr/bin/z

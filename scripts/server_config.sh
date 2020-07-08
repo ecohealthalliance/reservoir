@@ -43,5 +43,3 @@ echo "#!/bin/bash
 touch /etc/crontab /etc/cron.*/*
 exec cron -f" > /etc/services.d/cron/run
 
-# Restore man pages
-yes | unminimize

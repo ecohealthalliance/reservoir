@@ -16,6 +16,5 @@ A docker image for EHA's modeling and analytics work servers.
 - RStudio [preview edition](https://www.rstudio.com/products/rstudio/download/preview/)
 - Additional system and R libraries for geospatial (GRASS7/rgrass7) and optimization libraries (glpk/Symphony/gurobi) 
 
-Get the images [at Docker Hub](https://cloud.docker.com/repository/docker/ecohealthalliance/reservoir/). The **base** tag is the primary image, and the **gpu** tag adds capabilities for hosts with NVIDIA GPUs. Other tags are intermediate containers used
-to build these up in steps.
+Get the images [at Docker Hub](https://cloud.docker.com/repository/docker/ecohealthalliance/reservoir/). The **base** tag is the primary image, and the **gpu** tag adds capabilities for hosts with NVIDIA GPUs.
 

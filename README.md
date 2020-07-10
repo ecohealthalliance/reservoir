@@ -11,7 +11,6 @@ A docker image for EHA's modeling and analytics work servers.
 
 *reservoir* is an image built for the modeling and analytics workflow at [EcoHealth Alliance](ecohealthalliance.org).  It build on top of the [rocker project](https://www.rocker-project.org/) [geospatial](https://github.com/rocker-org/geospatial) Docker image, and adds:
 
-- A start-up workflow to load user accounts from the host server
 - A Shiny server 
 - SSH and [mosh](https://mosh.org/) access and a suite of command-line tools
 - RStudio [preview edition](https://www.rstudio.com/products/rstudio/download/preview/)

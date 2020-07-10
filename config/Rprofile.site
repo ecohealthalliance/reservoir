@@ -1,7 +1,10 @@
 # R Startup configuration
 
 ## Set CRAN mirror
-options(repos = c(CRAN = "https://cran.rstudio.com"))
+options(repos = c(
+  CRAN = "https://packagemanager.rstudio.com/all/__linux__/focal/latest",
+  BioCsoft = tools:::.read_repositories(file.path(R.home("etc"), "repositories"))["BioCsoft","URL"],
+  INLA = "https://inla.r-inla-download.org/R/stable"))
 
 ## Reduce raster tempfile generation
 options(rasterTmpTime = 1, rasterMaxMemory = 1e10) 

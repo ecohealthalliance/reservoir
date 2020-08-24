@@ -6,7 +6,7 @@ options(repos = c(
 ))
 
 ## Reduce raster tempfile generation
-options(rasterTmpTime = 1, rasterMaxMemory = 1e10) 
+options(rasterTmpTime = 1, rasterMaxMemory = 1e10)
 
 ## Set temp directory inside user folders
 if(!dir.exists(path.expand("~/tmp"))) dir.create(path.expand("~/tmp"))
@@ -26,6 +26,18 @@ if(is.na(Sys.getenv("HTTR_LOCALHOST", unset=NA))) {
   options(httr_oob_default = TRUE)
 }
 
+## Set to single threaded unless user has environment variables
+##    set to the contrary
+
+local({
+  if(require("RhpcBLASctl", quietly=TRUE)) {
+    if(Sys.getenv("OPENBLAS_NUM_THREADS")=="" &&
+       Sys.getenv("OMP_NUM_THREADS")=="") {
+       RhpcBLASctl::blas_set_num_threads(1)
+    }
+  }
+})
+
 ## Startup message
 #.First <- function() {
 #  ("\014")
@@ -38,4 +50,3 @@ if(is.na(Sys.getenv("HTTR_LOCALHOST", unset=NA))) {
 #      )
 #
 #}
-

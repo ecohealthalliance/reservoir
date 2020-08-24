@@ -22,6 +22,7 @@ install2.r --error --skipinstalled \
      renv \
      rasterVis \
      rgrass7 \
+     RhpcBLASctl \
      ROI \
      ROI.plugin.glpk \
      Rsymphony ROI.plugin.symphony
@@ -29,7 +30,5 @@ install2.r --error --skipinstalled \
 ## Install GitHub R Packages
 installGithub.r \
     s-u/unixtools
-    
-rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages
-  
 
+rm -rf /tmp/downloaded_packages/ /tmp/*.rds /root/tmp/downloaded_packages

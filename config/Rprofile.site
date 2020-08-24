@@ -31,7 +31,7 @@ if(is.na(Sys.getenv("HTTR_LOCALHOST", unset=NA))) {
 
 local({
   if(require("RhpcBLASctl", quietly=TRUE)) {
-    if(Sys.getenv("OPENBLAS_NUM_THREADS")=="" &
+    if(Sys.getenv("OPENBLAS_NUM_THREADS")=="" &&
        Sys.getenv("OMP_NUM_THREADS")=="") {
        if (!requireNamespace("mgcv", quietly=TRUE)) {
            install.packages("mgcv")

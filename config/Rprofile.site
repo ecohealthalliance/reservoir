@@ -36,7 +36,7 @@ local({
        if (!requireNamespace("mgcv", quietly=TRUE)) {
            install.packages("mgcv")
        }
-       blas_set_num_threads(1)
+       RhpcBLASctl::blas_set_num_threads(1)
     }
   }
 })

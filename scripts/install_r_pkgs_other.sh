@@ -16,7 +16,6 @@ install2.r --error --skipinstalled \
      keras \
      knitcitations \
      loo \
-     mgcv \
      optimx \
      patchwork \
      plotly \

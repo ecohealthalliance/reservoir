@@ -59,6 +59,7 @@ apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-he
   ncdu \
   nnn \
   p7zip-full \
+  postgresql-client \
   protobuf-compiler \
   pv \
   rclone \

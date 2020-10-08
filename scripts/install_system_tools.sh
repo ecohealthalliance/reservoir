@@ -22,7 +22,6 @@ apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-he
   cron \
   curl \
   dirmngr \
-  encfs \
   fish \
   fzf \
   git-core \
@@ -30,6 +29,7 @@ apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-he
   gpg \
   gnupg \
   gnupg2 \
+  gocryptfs \
   golang-go \
   graphviz \
   grass \

@@ -1,4 +1,4 @@
-FROM rocker/geospatial:4.0.2
+FROM rocker/geospatial:4.0.4
 MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 
 ENV PYTHON_VENV_PATH=/opt/venv/reticulate
@@ -26,8 +26,5 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
 COPY /scripts/server_config.sh /reservoir_scripts/server_config.sh
 COPY config /reservoir_config
 RUN /reservoir_scripts/server_config.sh
-  
+
 EXPOSE 22 8787 3838
-
-
-

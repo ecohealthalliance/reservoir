@@ -1,4 +1,4 @@
-FROM rocker/geospatial:4.0.3
+FROM rocker/geospatial:4.0.4
 MAINTAINER "Noam Ross" ross@ecohealthalliance.org
 
 ENV PYTHON_VENV_PATH=/opt/venv/reticulate
